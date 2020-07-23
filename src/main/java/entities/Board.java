@@ -33,7 +33,7 @@ public class Board {
                 } else if (board[BOARD_WIDTH][BOARD_HEIGHT] == 2) { //a hit is worth 2, prints x
                     System.out.print("\t" + "X");
                 } else if (board[BOARD_WIDTH][BOARD_HEIGHT] == 1) {
-                    System.out.print("\t" + "c");
+                    System.out.print("\t" + "y");
                 } else {
                     System.out.print("\t" + "*");
                 }

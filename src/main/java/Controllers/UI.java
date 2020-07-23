@@ -10,6 +10,7 @@ import java.util.Scanner;
 public class UI {
    GameState gameState = new GameState();
     Scanner input = new Scanner(System.in);
+    int ownerOfShip = 0;
 
 
 
@@ -18,6 +19,7 @@ public class UI {
        int xCoord = input.nextInt();
        System.out.print("Please enter your Y coord: ");
        int yCoord = input.nextInt();
+       int ownerOfShip = 1;
 
 
        gameState.addCoords(xCoord, yCoord, ship);
@@ -69,33 +71,6 @@ public class UI {
        board.createBoard();
     }
 
-
-
-//    public int placeShip(int x, int y, int coordX, int CoordY){
-//        direction = computer.getShipDirection();
-//        if (compIsValidPos()) {
-//            board[compX][compY] = 1;
-//            for (int j = 0; j < size; j++) {
-//                switch (compDirection) {
-//                    case 1:
-//                        //vertical placement down
-//                        board[compX][compY] = 1;
-//                        compX += 1;
-//                        break;
-//                    case 2:
-//                        board[compX][compY] = 1;
-//                        compY += 1;
-//                        break;
-//                    case 3:
-//                        board[compX][compY] = 1;
-//                        compX -= 1;
-//                        break;
-//                    case 4:
-//                        board[compX][compY] = 1;
-//                        compY -= 1;
-//                        break;
-//                }
-//            }
 
 
 

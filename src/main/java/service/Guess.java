@@ -1,8 +1,10 @@
 package service;
 
 public class Guess {
-   private int guess;
+   private int playerGuesses;
    private boolean isValidGuess;
+
+
 
 
 
