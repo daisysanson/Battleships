@@ -3,36 +3,42 @@ package service;
 import entities.Ship;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class GameState {
 
     private boolean sizeEntered;
+    private boolean validGuess = true;
     private boolean coordsEntered;
     private boolean directionEntered;
     private boolean completeShip;
     private Ship ship;
-    public static List<Integer> shipCoords = new ArrayList<Integer>();
+    private HashMap<Integer, Integer> coordinatesSelected = new HashMap<Integer, Integer>();
     public static List<Ship> userShips = new ArrayList<Ship>();
 
 
-    public List<Integer> addCoords(int xCoord, int yCoord, Ship ship) {
-        shipCoords.add(yCoord);
-        shipCoords.add(xCoord);
-        coordsEntered = true;
-        return shipCoords;
+    public HashMap<Integer, Integer> coordsSelected (int x, int y) {
+        coordinatesSelected.put(x,y);
+        return coordinatesSelected;
+    }
+
+    public boolean isValidGuess(int x, int y){
+        if(coordinatesSelected.containsKey(x) && coordinatesSelected.containsValue(y)){ //putbeforethecehck
+            System.out.println("Nah mate");
+            return !validGuess;
+        } else{
+            return validGuess;
+        }
     }
 
 
+
     public int shipDirection(int direction, Ship ship) {
-        ship.setDirection(direction);
-        directionEntered = true;
         return direction;
     }
 
     public int shipSize(int size, Ship ship) {
-        ship.setShipSize(size);
-        sizeEntered = true;
         return size;
     }
 

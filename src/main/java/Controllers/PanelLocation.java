@@ -1,4 +1,6 @@
 package Controllers;
+import service.GameState;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.BorderLayout;
@@ -6,26 +8,36 @@ import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public class PanelLocation implements MouseListener {//inheriting JFrame
+public class PanelLocation extends JPanel implements MouseListener {//inheriting JFrame
+    GameState state = new GameState();
     private JPanel mainPanel, footerPanel;
     private JFrame frame;
-    private JPanel[] panel = new JPanel[9];
-    ArrayList<Integer> boxCoords = new ArrayList<Integer>();
+    private int LENGTH = 10;
+    private int WIDTH = 10;
+    private JPanel[][] panel = new JPanel[10][10];
+    private ArrayList<Integer> boxCoords = new ArrayList<Integer>();
     private Integer box;
     private JTextField tfield;
 
-    public PanelLocation() {
+
+//    @Override
+//    public Dimension getPreferredSize() {
+//        return new Dimension(1000, 1000);
+//    }
 
 
+    public PanelLocation(){
+        this.state = new GameState();
         mainPanel = new JPanel();
-        mainPanel.setLayout(new GridLayout(3, 3));
-
+        mainPanel.setLayout(new GridLayout(10,10));
         frame = new JFrame("Battleship");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        initComponents(frame);
+        initComponents(frame, LENGTH, WIDTH);
         printPanelCompPoints(mainPanel); //will return the coords as the frame has been packed in initComponents
 
         frame.add(mainPanel);
@@ -34,15 +46,15 @@ public class PanelLocation implements MouseListener {//inheriting JFrame
     }
 
 
-        private void initComponents(JFrame frame) {
-        for (int i = 0; i < 9; i++)
-        {
-            panel[i] = new JPanel();
-            panel[i].addMouseListener(this);
-            panel[i].setBorder(BorderFactory.createLineBorder(Color.BLUE));
-            mainPanel.add(panel[i]);
+        private void initComponents (JFrame frame, int LENGTH, int WIDTH) {
+        for (int y = 0; y < LENGTH ; y++) {
+            for (int x = 0; x < WIDTH; x++) {
+                panel[y][x] = new JPanel();
+                panel[y][x].addMouseListener(this);
+                panel[y][x].setBorder(BorderFactory.createLineBorder(Color.BLACK));
+                mainPanel.add(panel[y][x]);
+            }
         }
-
 
 
         frame.getContentPane().add(mainPanel);
@@ -67,65 +79,77 @@ public class PanelLocation implements MouseListener {//inheriting JFrame
 
 
     private void printPanelCompPoints(JPanel mainPanel) {
-//        System.out.println(mainPanel.getComponentCount());
+        System.out.println(mainPanel.getComponentCount());
 
         for (int i = 0; i < mainPanel.getComponentCount(); i++) {
             boxCoords.add(i);
         }
-//        for (int i = 0; i < mainPanel.getComponentCount(); i++) {
-//            System.out.println(mainPanel.getComponent(i).getX() + ", " + mainPanel.getComponent(i).getY());
-//        }
-//        for (int i = 0; i < mainPanel.getComponentCount(); i++) {
-//            System.out.println(mainPanel.getComponent(i).getX() + ", " + mainPanel.getComponent(i).getY());
-//        }
-        for (int i = 1; i < boxCoords.size(); i++) {
-            System.out.println(i);
+////        for (int i = 0; i < mainPanel.getComponentCount(); i++) {
+////            System.out.println(mainPanel.getComponent(i).getX() + ", " + mainPanel.getComponent(i).getY());
+////        }
+////        for (int i = 0; i < mainPanel.getComponentCount(); i++) {
+////            System.out.println(mainPanel.getComponent(i).getX() + ", " + mainPanel.getComponent(i).getY());
+////        }
+//        for (int i = 1; i < boxCoords.size(); i++) {
+//            System.out.println(i);
 
         }
 
 
-    }
 
 
     private void getWhichButtonGotPressed(int x, int y) {
-        if ((x == panel[0].getX()) && (y == panel[0].getY()))
-        {
-            panel[0].setBackground(Color.MAGENTA);
+        tfield.setText("You Picked " + x + ", " + y);
+//        if ((x == panel[0][0].getX()) && (y == panel[0][0].getY())) {
+//            panel[0][0].setBackground(Color.MAGENTA);
+//
+//            tfield.setText("You Picked " which is at" + panel[0][0].getX() + ", " + panel[0][0].getY());
+//        }
 
-            tfield.setText("You Clicked Panel : " + boxCoords.get(1) +   "which is at" + panel[0].getX() + ", " +  panel[0].getY());
-        }
-        if ((x == panel[1].getX()) && (y == panel[1].getY()))
-        {
-            panel[1].setBackground(Color.RED);
-            tfield.setText("You Clicked Panel : " + boxCoords.get(2) +  " which is at "+ panel[1].getX() + ", " +  panel[1].getY());
-        }
-        if ((x == panel[2].getX()) && (y == panel[2].getY()))
-        {
-            panel[2].setBackground(Color.RED);
-            tfield.setText("You Clicked Panel : "  + "which is at" +  panel[2].getX() + ", " +  panel[2].getY());
-        }
 
     }
+    public void addLabelToPanel(MouseEvent e){
+        JPanel panel = (JPanel) e.getSource();
+        Object source = e.getSource();
+        if (source instanceof JPanel) {
+            JPanel panelPressed = (JPanel) source;
+            panelPressed.setBackground(Color.blue);
+        }
+
+
+
+
+
+    }
+
 
     public void mouseClicked(MouseEvent e) {
+        PlayerSelection playerSelection = new PlayerSelection();
+        HashMap coords = state.coordsSelected(e.getY(), e.getX());
         JPanel panel = (JPanel) e.getSource();
-
         getWhichButtonGotPressed(panel.getX(), panel.getY());
+        addLabelToPanel(e);
+        state.isValidGuess(e.getX(), e.getY());
+        playerSelection.createGuess(panel.getX(), panel.getY());
+
+
+
+
+    }
+        public void mousePressed (MouseEvent e){
+        }
+
+        public void mouseReleased (MouseEvent e){
+        }
+
+        public void mouseEntered (MouseEvent e){
+        }
+
+        public void mouseExited (MouseEvent e){
+        }
+
     }
 
-    public void mousePressed(MouseEvent e) {
-    }
-
-    public void mouseReleased(MouseEvent e) {
-    }
-
-    public void mouseEntered(MouseEvent e) {
-    }
-
-    public void mouseExited(MouseEvent e) {
-    }
-
-}
 
 
 

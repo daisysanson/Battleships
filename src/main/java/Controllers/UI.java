@@ -14,16 +14,16 @@ public class UI {
 
 
 
-   public void getUserCoord(Ship ship) {
-       System.out.print("Please enter your X coord: ");
-       int xCoord = input.nextInt();
-       System.out.print("Please enter your Y coord: ");
-       int yCoord = input.nextInt();
-       int ownerOfShip = 1;
-
-
-       gameState.addCoords(xCoord, yCoord, ship);
-   }
+//   public void getUserCoord(Ship ship) {
+//       System.out.print("Please enter your X coord: ");
+//       int xCoord = input.nextInt();
+//       System.out.print("Please enter your Y coord: ");
+//       int yCoord = input.nextInt();
+//       int ownerOfShip = 1;
+//
+//
+//       gameState.addCoords(xCoord, yCoord, ship);
+//   }
 
    public int getUserDirection(Ship ship){
        System.out.println("\nPlease select direction you wish to place your ship - \n1: down \n2: right \n3: up \n4: left");
