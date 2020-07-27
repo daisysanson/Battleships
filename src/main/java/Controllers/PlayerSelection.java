@@ -10,28 +10,25 @@ public class PlayerSelection {
     private ArrayList<Guess> playerCoords = new ArrayList<Guess>();
 
 
+    public void promptUser() {
 
-public void promptUser(){
-
-}
-
-
-
-    public void getGuess(Guess guess){
-        System.out.println(guess.getX());
-        System.out.println(guess.getY());
-
-        }
-
-
-
-    public void createGuess(int x, int y) {
-        Guess guess = new Guess(x, y);
-
-            playerCoords.add(guess);
-            getGuess(guess);
-        }
     }
 
+
+    public void getGuess(Guess guess) {
+        System.out.println("X coord : " + guess.getX());
+        System.out.println("Y coord : " + guess.getY());
+
+    }
+
+
+    public Guess createGuess(int x, int y) {
+        Guess guess = new Guess(x, y);
+        playerCoords.add(guess);
+        getGuess(guess);
+        return guess;
+    }
+
+}
 
 

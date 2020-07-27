@@ -3,54 +3,70 @@ package service;
 import entities.Ship;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class GameState {
 
     private boolean sizeEntered;
-    private boolean validGuess = true;
+    private boolean validGuess;
     private boolean coordsEntered;
     private boolean directionEntered;
     private boolean completeShip;
     private Ship ship;
-    private HashMap<Integer, Integer> coordinatesSelected = new HashMap<Integer, Integer>();
+    private ArrayList<Guess> coordinatesSelected = new ArrayList<Guess>();
     public static List<Ship> userShips = new ArrayList<Ship>();
 
+    public GameState() {
+    }
 
-    public HashMap<Integer, Integer> coordsSelected (int x, int y) {
-        coordinatesSelected.put(x,y);
+    public ArrayList<Guess> addCoords(Guess guess) {
+        if (!isValidGuess(guess)) {
+            System.out.println("No way");
+        }
+        coordinatesSelected.add(guess);
         return coordinatesSelected;
     }
 
-    public boolean isValidGuess(int x, int y){
-        if(coordinatesSelected.containsKey(x) && coordinatesSelected.containsValue(y)){ //putbeforethecehck
-            System.out.println("Nah mate");
-            return !validGuess;
-        } else{
-            return validGuess;
+
+    public boolean isValidGuess(Guess guess) {
+        for (Guess guess1 : coordinatesSelected) {
+            if (guess.getX() == (guess1.getX()) && (guess.getY() == guess1.getY())) {
+                return validGuess = false;
+            }
         }
-    }
-
-
-
-    public int shipDirection(int direction, Ship ship) {
-        return direction;
-    }
-
-    public int shipSize(int size, Ship ship) {
-        return size;
-    }
-
-    public boolean isCompleteShip(Ship ship) {
-        if ((directionEntered == true) && (coordsEntered == true) && (sizeEntered == true)) {
-            userShips.add(ship);
-            return completeShip = true;
-        } else {
-            return false;
-        }
+        return true;
     }
 }
+
+
+
+
+
+//        (coordinatesSelected.contains(guess.getX()) && coordinatesSelected.contains(guess.getY())){
+//            return !validGuess;
+//        } else{
+//            return validGuess;
+//        }}
+
+
+
+//    public int shipDirection(int direction, Ship ship) {
+//        return direction;
+//    }
+//
+//    public int shipSize(int size, Ship ship) {
+//        return size;
+//    }
+
+//    public boolean isCompleteShip(Ship ship) {
+//        if ((directionEntered == true) && (coordsEntered == true) && (sizeEntered == true)) {
+//            userShips.add(ship);
+//            return completeShip = true;
+//        } else {
+//            return false;
+//        }
+//    }
+//}
 
 
 

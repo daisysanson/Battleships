@@ -1,5 +1,6 @@
 package Controllers;
 import service.GameState;
+import service.Guess;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,7 +15,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class PanelLocation extends JPanel implements MouseListener {//inheriting JFrame
-    GameState state = new GameState();
+    GameState state;
+    PlayerSelection playerSelection;
     private JPanel mainPanel, footerPanel;
     private JFrame frame;
     private int LENGTH = 10;
@@ -25,43 +27,57 @@ public class PanelLocation extends JPanel implements MouseListener {//inheriting
     private JTextField tfield;
 
 
-//    @Override
-//    public Dimension getPreferredSize() {
-//        return new Dimension(1000, 1000);
-//    }
 
 
-    public PanelLocation(){
-        this.state = new GameState();
-        mainPanel = new JPanel();
-        mainPanel.setLayout(new GridLayout(10,10));
-        frame = new JFrame("Battleship");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        initComponents(frame, LENGTH, WIDTH);
+    public PanelLocation(GameState state, PlayerSelection playerSelection){
+        this.state = state;
+        this.playerSelection = playerSelection;
+
+
+        initComponents();
         printPanelCompPoints(mainPanel); //will return the coords as the frame has been packed in initComponents
 
-        frame.add(mainPanel);
 
 
     }
 
 
-        private void initComponents (JFrame frame, int LENGTH, int WIDTH) {
-        for (int y = 0; y < LENGTH ; y++) {
-            for (int x = 0; x < WIDTH; x++) {
-                panel[y][x] = new JPanel();
-                panel[y][x].addMouseListener(this);
-                panel[y][x].setBorder(BorderFactory.createLineBorder(Color.BLACK));
-                mainPanel.add(panel[y][x]);
-            }
+
+    class Panel extends JPanel {
+        public void paintComponent(Graphics g) {
+            g.drawRect(0, 0, 100, 100);
         }
+    }
 
 
-        frame.getContentPane().add(mainPanel);
+    private void initComponents () {
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int height = 800 * 2 / 3;
+        int width = 800 * 2 / 3;
+
+        frame = new JFrame("Battleship");
+        frame.setResizable(false);
+        frame.setPreferredSize(new Dimension(width, height));
+
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+
+        mainPanel = new JPanel();
+
+        mainPanel.setLayout(new GridLayout(10,10));
+            for (int y = 0; y < LENGTH ; y++) {
+                for (int x = 0; x < WIDTH; x++) {
+                    panel[y][x] = new Panel();
+                    panel[y][x].setPreferredSize(new Dimension(100,100));
+                    panel[y][x].setBorder(BorderFactory.createLineBorder(Color.black));
+                    panel[y][x].addMouseListener(this);
+                    mainPanel.add(panel[y][x]);
+                }
+            }
+
+
 
         footerPanel = new JPanel();
-
-
         tfield = new JTextField(10);
         footerPanel.add(tfield);
 
@@ -79,7 +95,7 @@ public class PanelLocation extends JPanel implements MouseListener {//inheriting
 
 
     private void printPanelCompPoints(JPanel mainPanel) {
-        System.out.println(mainPanel.getComponentCount());
+        System.out.println("Panel Total : " + mainPanel.getComponentCount());
 
         for (int i = 0; i < mainPanel.getComponentCount(); i++) {
             boxCoords.add(i);
@@ -108,11 +124,9 @@ public class PanelLocation extends JPanel implements MouseListener {//inheriting
 
 
     }
-    public void addLabelToPanel(MouseEvent e){
-        JPanel panel = (JPanel) e.getSource();
-        Object source = e.getSource();
-        if (source instanceof JPanel) {
-            JPanel panelPressed = (JPanel) source;
+    public void addLabelToPanel(JPanel panel){
+        if (panel instanceof JPanel) {
+            JPanel panelPressed = (JPanel) panel;
             panelPressed.setBackground(Color.blue);
         }
 
@@ -124,13 +138,11 @@ public class PanelLocation extends JPanel implements MouseListener {//inheriting
 
 
     public void mouseClicked(MouseEvent e) {
-        PlayerSelection playerSelection = new PlayerSelection();
-        HashMap coords = state.coordsSelected(e.getY(), e.getX());
         JPanel panel = (JPanel) e.getSource();
+        Guess guess = playerSelection.createGuess(panel.getX(), panel.getY());
+        ArrayList addCoords = state.addCoords(guess);
         getWhichButtonGotPressed(panel.getX(), panel.getY());
-        addLabelToPanel(e);
-        state.isValidGuess(e.getX(), e.getY());
-        playerSelection.createGuess(panel.getX(), panel.getY());
+        addLabelToPanel(panel);
 
 
 

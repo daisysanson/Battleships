@@ -12,11 +12,13 @@ public class Main {
 
     public static void main(String[] args) {
         Ship ship = new Ship();
+        final PlayerSelection playerSelection = new PlayerSelection();
+        final GameState gameState = new GameState();
         SwingUtilities.invokeLater(new Runnable()
         {
             public void run()
             {
-                new PanelLocation();
+                new PanelLocation(gameState, playerSelection);
             }
         });
     }
