@@ -9,8 +9,14 @@ import java.util.Scanner;
 
 public class UI {
    GameState gameState = new GameState();
+    GameState state;
+    PlayerSelection playerSelection;
     Scanner input = new Scanner(System.in);
     int ownerOfShip = 0;
+
+
+
+
 
 
 //   public int getUserDirection(Ship ship){

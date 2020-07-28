@@ -1,12 +1,12 @@
 package Controllers;
 ///LOGIC FOR GUESSES
-import service.Guess;
+import entities.Guess;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class PlayerSelection {
     private PanelLocation panelLocation;
+    private int clickCount;
     private ArrayList<Guess> playerCoords = new ArrayList<Guess>();
 
 

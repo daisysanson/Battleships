@@ -1,35 +1,35 @@
 package Controllers;
+import javafx.scene.layout.Pane;
 import service.GameState;
-import service.Guess;
+import entities.Guess;
+import sun.tools.jps.Jps;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class PanelLocation extends JPanel implements MouseListener {//inheriting JFrame
     GameState state;
     PlayerSelection playerSelection;
+    private boolean mustDraw = false;
+    private ArrayList<Point>  points = new ArrayList<Point>();
     private JPanel mainPanel, footerPanel;
     private JFrame frame;
     private int LENGTH = 10;
     private int WIDTH = 10;
+    private int clickCount;
     private JPanel[][] panel = new JPanel[10][10];
     private ArrayList<Integer> boxCoords = new ArrayList<Integer>();
     private Integer box;
     private JTextField tfield;
 
 
-
-
-    public PanelLocation(GameState state, PlayerSelection playerSelection){
+    public PanelLocation(GameState state, PlayerSelection playerSelection) {
         this.state = state;
         this.playerSelection = playerSelection;
 
@@ -37,69 +37,67 @@ public class PanelLocation extends JPanel implements MouseListener {//inheriting
         initComponents();
         printPanelCompPoints(mainPanel); //will return the coords as the frame has been packed in initComponents
 
-
-
     }
-
 
 
     class Panel extends JPanel {
         public void paintComponent(Graphics g) {
             g.drawRect(0, 0, 100, 100);
+            }
         }
-    }
+
+        private void initComponents() {
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+            int height = 800 * 2 / 3;
+            int width = 800 * 2 / 3;
+
+            frame = new JFrame("Battleship");
+            frame.setResizable(false);
+            frame.setPreferredSize(new Dimension(width, height));
+
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 
-    private void initComponents () {
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        int height = 800 * 2 / 3;
-        int width = 800 * 2 / 3;
+            mainPanel = new JPanel();
+            JLabel label = new JLabel("Click count: " + clickCount);
 
-        frame = new JFrame("Battleship");
-        frame.setResizable(false);
-        frame.setPreferredSize(new Dimension(width, height));
-
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-
-        mainPanel = new JPanel();
-
-        mainPanel.setLayout(new GridLayout(10,10));
-            for (int y = 0; y < LENGTH ; y++) {
+            mainPanel.setLayout(new GridLayout(10, 10));
+            for (int y = 0; y < LENGTH; y++) {
                 for (int x = 0; x < WIDTH; x++) {
                     panel[y][x] = new Panel();
-                    panel[y][x].setPreferredSize(new Dimension(100,100));
+                    panel[y][x].setPreferredSize(new Dimension(100, 100));
                     panel[y][x].setBorder(BorderFactory.createLineBorder(Color.black));
+                    panel[y][x].add(label);
                     panel[y][x].addMouseListener(this);
+                    panel[y][x].setBackground(new Color(0xFFFF00));
                     mainPanel.add(panel[y][x]);
                 }
             }
 
 
-
-        footerPanel = new JPanel();
-        tfield = new JTextField(10);
-        footerPanel.add(tfield);
-
-
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLocationRelativeTo(null);
-
-        frame.add(mainPanel, BorderLayout.CENTER);
-        frame.add(footerPanel, BorderLayout.PAGE_END);
+            footerPanel = new JPanel();
+            tfield = new JTextField(10);
+            footerPanel.add(tfield);
 
 
-        frame.pack();
-        frame.setVisible(true);
-    }
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setLocationRelativeTo(null);
+
+            frame.add(mainPanel, BorderLayout.CENTER);
+            frame.add(footerPanel, BorderLayout.PAGE_END);
 
 
-    private void printPanelCompPoints(JPanel mainPanel) {
-        System.out.println("Panel Total : " + mainPanel.getComponentCount());
-
-        for (int i = 0; i < mainPanel.getComponentCount(); i++) {
-            boxCoords.add(i);
+            frame.pack();
+            frame.setVisible(true);
         }
+
+
+        private void printPanelCompPoints(JPanel mainPanel) {
+            System.out.println("Panel Total : " + mainPanel.getComponentCount());
+
+            for (int i = 0; i < mainPanel.getComponentCount(); i++) {
+                boxCoords.add(i);
+            }
 ////        for (int i = 0; i < mainPanel.getComponentCount(); i++) {
 ////            System.out.println(mainPanel.getComponent(i).getX() + ", " + mainPanel.getComponent(i).getY());
 ////        }
@@ -112,53 +110,67 @@ public class PanelLocation extends JPanel implements MouseListener {//inheriting
         }
 
 
+        private void getWhichButtonGotPressed(int x, int y) {
+            tfield.setText("You Picked " + x + ", " + y);
+        }
 
 
-    private void getWhichButtonGotPressed(int x, int y) {
-        tfield.setText("You Picked " + x + ", " + y);
-//        if ((x == panel[0][0].getX()) && (y == panel[0][0].getY())) {
-//            panel[0][0].setBackground(Color.MAGENTA);
+        public void getColourOfPanel(JPanel panel, MouseEvent e) {
+            Color c = panel.getBackground();
+            System.out.println("color: " + c.toString());
+        }
+
+
+//    public void addLabelToPanel(JPanel panel, MouseEvent e) {
 //
-//            tfield.setText("You Picked " which is at" + panel[0][0].getX() + ", " + panel[0][0].getY());
+//        if (panel instanceof JPanel) {
+//            JPanel panelPressed = (JPanel) panel;
+//            panelPressed.setBackground(Color.blue);
 //        }
+//
+//    }
 
 
-    }
-    public void addLabelToPanel(JPanel panel){
-        if (panel instanceof JPanel) {
-            JPanel panelPressed = (JPanel) panel;
-            panelPressed.setBackground(Color.blue);
+        public void repaintCoords() {
+            ArrayList<Guess> coords = state.getCoordinatesSelected();
+            for (Guess guess : coords) {
+                Point point = new Point(guess.getX(), guess.getY());
+                points.add(point);
+            }
+
+        }
+        public void mouseClicked(MouseEvent e) {
+            JPanel panel = (JPanel) e.getSource();
+            Guess guess = playerSelection.createGuess(panel.getX(), panel.getY());
+            ArrayList addCoords = state.addCoords(guess);
+            getWhichButtonGotPressed(panel.getX(), panel.getY());
+            getColourOfPanel(panel, e);
+            repaintCoords();
+
+
         }
 
+        public void mousePressed(MouseEvent e) {
+            Panel panel = (Panel) e.getSource();
+            panel.setBackground(Color.red);
+           /* if(points.contains(panel.getX()), (panel.getY());{
+                panel.setBackground(Color.pink);*/
+            }
 
 
 
 
-    }
+        public void mouseReleased(MouseEvent e) {
 
-
-    public void mouseClicked(MouseEvent e) {
-        JPanel panel = (JPanel) e.getSource();
-        Guess guess = playerSelection.createGuess(panel.getX(), panel.getY());
-        ArrayList addCoords = state.addCoords(guess);
-        getWhichButtonGotPressed(panel.getX(), panel.getY());
-        addLabelToPanel(panel);
-
-
-
-
-    }
-        public void mousePressed (MouseEvent e){
         }
 
-        public void mouseReleased (MouseEvent e){
+        public void mouseEntered(MouseEvent e) {
         }
 
-        public void mouseEntered (MouseEvent e){
+        public void mouseExited(MouseEvent e) {
+
         }
 
-        public void mouseExited (MouseEvent e){
-        }
 
     }
 

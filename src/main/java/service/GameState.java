@@ -1,5 +1,6 @@
 package service;
 
+import entities.Guess;
 import entities.Ship;
 
 import java.util.ArrayList;
@@ -35,6 +36,14 @@ public class GameState {
             }
         }
         return true;
+    }
+
+    public ArrayList<Guess> getCoordinatesSelected() {
+        return coordinatesSelected;
+    }
+
+    public void setCoordinatesSelected(ArrayList<Guess> coordinatesSelected) {
+        this.coordinatesSelected = coordinatesSelected;
     }
 }
 
