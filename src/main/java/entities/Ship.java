@@ -5,20 +5,24 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Ship {
-    private int xCoord;
-    private int yCoord;
+    private int x;
+    private int y;
     private int direction;
     private int shipCounter;
     public HashMap<Integer, String> shipsType = new HashMap<Integer, String>();
-    public int shipSize;
+    public int size;
     private boolean completeShip;
 
 
-    public Ship(int xCoord, int yCoord, int direction, int shipSize) {
-        this.xCoord = xCoord;
-        this.yCoord = yCoord;
+    public Ship(int x, int y, int direction, int size) {
+        this.x = x;
+        this.y = y;
         this.direction = direction;
-        this.shipSize = shipSize;
+        this.size = size;
+    }
+
+    public Ship(int xCoord, int yCoord){
+        this(xCoord, yCoord, 0, 0);
     }
 
 
@@ -26,20 +30,20 @@ public class Ship {
 
 
 
-    public int getXCoord() {
-        return xCoord;
+    public int getX() {
+        return x;
     }
 
-    public void setXCoord(int coordX) {
-        this.xCoord = coordX;
+    public void setX(int x) {
+        this.x = x;
     }
 
-    public int getYCoord() {
-        return yCoord;
+    public int getY() {
+        return y;
     }
 
-    public void setYCoord(int coordY) {
-        this.yCoord = coordY;
+    public void setY(int y) {
+        this.y = y;
     }
 
     public int getDirection() {
@@ -72,24 +76,8 @@ public class Ship {
         this.completeShip = completeShip;
     }
 
-    public int getShipSize() {
-        return shipSize;
-    }
-
-    public int getxCoord() {
-        return xCoord;
-    }
-
-    public void setxCoord(int xCoord) {
-        this.xCoord = xCoord;
-    }
-
-    public int getyCoord() {
-        return yCoord;
-    }
-
-    public void setyCoord(int yCoord) {
-        this.yCoord = yCoord;
+    public int getSize() {
+        return size;
     }
 
     public void setShipsType(HashMap<Integer, String> shipsType) {
@@ -97,11 +85,11 @@ public class Ship {
     }
 
     public void setShipSize(int shipSize) {
-        this.shipSize = shipSize;
+        this.size = shipSize;
     }
 
     public boolean isSunk() {
-        if (shipSize <= 0) {
+        if (size <= 0) {
             return true;
         } else
             return false;
