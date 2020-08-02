@@ -20,7 +20,7 @@ public class ComputerShip extends Ship  {
     public ComputerShip(){}
 
     public  int randomPanelGenerator() {
-       return rand.nextInt(101 - 0 + 1);
+       return rand.nextInt(100 - 0 + 1);
     }
 
     public int randomNumberGenerator(){

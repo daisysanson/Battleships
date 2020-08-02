@@ -9,14 +9,10 @@ import java.util.ArrayList;
 
 public class GameState {
 
-    Remove remove;
-    private boolean sizeEntered;
+    Remove remove = new Remove();
+
+    private boolean playerWinner;
     private boolean validGuess;
-    private int outcome;
-    private boolean coordsEntered;
-    private boolean directionEntered;
-    private boolean completeShip;
-    private Ship ship;
     private boolean shipHit;
     private ArrayList<Guess> guesses = new ArrayList<>();
     private ArrayList<ComputerShip> computerShips = new ArrayList<>();
@@ -26,39 +22,36 @@ public class GameState {
     }
 
 
-
     public int getOutcome() {
-        if (shipHit == true) {
-            return outcome = 0;
-        } if(validGuess == false){
+        boolean isGameOver = checkGameOver();
+        if (isShipHit()) {
+            return 0;
+        }
+        if (!isValidGuess()) {
             return 2;
+        }
+        if (isGameOver) {
+            return 3;
         }
         return 1;
     }
 
 
-
-
     public void addCoords(Guess guess) {
-        while (true) {
-            if (!checkValidGuess(guess)) {
-                validGuess = false;
-                System.out.println("Panel already selected");
-                break;
-            } if(checkShipHit(guess) == true) {
-                shipHit = true;
-                System.out.println("you've hit a ship!");
-                break;
-
-            }
-            validGuess = true;
-            shipHit = false;
-            guesses.add(guess);
-            break;
-
+        shipHit = false;
+        if (!checkValidGuess(guess)) {
+            validGuess = false;
+            System.out.println("Panel already selected");
         }
 
+        if (checkShipHit(guess) == true) {
+            shipHit = true;
+            System.out.println("you've hit a ship!");
+        }
+        validGuess = true;
+        guesses.add(guess);
     }
+
     public ArrayList<ComputerShip> addComputerShips(ComputerShip ship) {
         computerShips.add(ship);
         return computerShips;
@@ -75,16 +68,15 @@ public class GameState {
     }
 
 
-
-
-        public boolean checkValidGuess (Guess guess){
-            for (Guess guess1 : guesses) {
-                if ((guess.getX() == (guess1.getX()) && (guess.getY() == guess1.getY()))) {
-                    return false;
-                }
+    public boolean checkValidGuess(Guess guess) {
+        for (Guess guess1 : guesses) {
+            if ((guess.getX() == (guess1.getX()) && (guess.getY() == guess1.getY()))) {
+                return false;
             }
-            return true;
         }
+        return true;
+    }
+
 
     public ArrayList<Guess> getGuesses() {
         return guesses;
@@ -97,7 +89,36 @@ public class GameState {
     public boolean isShipHit() {
         return shipHit;
     }
-}
+
+    public boolean checkGameOver() {
+        return (guesses.size() >= 2 || shipHit);
+    }
+
+    public String calculateWinner() {
+        if (shipHit == true) {
+            return "YOU WIN!";
+        }
+        return "YOU LOSE!";
+    }
+
+    public boolean isPlayerWinner() {
+        return playerWinner;
+    }
+
+    public void setPlayerWinner(boolean playerWinner) {
+        this.playerWinner = playerWinner;
+    }
+
+//    public ArrayList resetGuesses() {
+//        return remove.resetLists(guesses);
+//    }
+//
+//        public ArrayList resetComputerShips() {
+//            remove.resetLists(computerShips);
+//
+//        }
+    }
+
 
 
 

@@ -16,7 +16,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class PanelLocation extends JPanel implements MouseListener {//inheriting JFrame
-    Random rand = new Random();
     PlayerSelection playerSelection;
     GameState state;
     static Logger log = Logger.getLogger("Panel Location");
@@ -28,7 +27,6 @@ public class PanelLocation extends JPanel implements MouseListener {//inheriting
     private int LENGTH = 10;
     private int WIDTH = 10;
     private JPanel[][] panel = new JPanel[10][10];
-    int occurances = 0;
     private JTextField tfield;
 
 
@@ -36,10 +34,19 @@ public class PanelLocation extends JPanel implements MouseListener {//inheriting
         this.playerSelection = playerSelection;
         this.state = state;
 
+        initNewGame();
+
+
+    }
+
+    public void initNewGame(){
         initComponents();
         initComputerShips(playerSelection.createComputerCoords());
         printPanelCompPoints(mainPanel);
+        revalidate();
+        repaint();
     }
+
 
 
     class Panel extends JPanel {
@@ -78,6 +85,7 @@ public class PanelLocation extends JPanel implements MouseListener {//inheriting
 
         footerPanel = new JPanel();
         tfield = new JTextField(30);
+        tfield.setEditable(false);
         footerPanel.add(tfield);
 
 
@@ -121,6 +129,8 @@ public class PanelLocation extends JPanel implements MouseListener {//inheriting
                     "You hit the computer's ship!",
                     "HIT!",
                     JOptionPane.PLAIN_MESSAGE);
+            endGame();
+
         }
         if (outcome == 1) {
             JOptionPane.showMessageDialog(frame,
@@ -134,14 +144,32 @@ public class PanelLocation extends JPanel implements MouseListener {//inheriting
                     "Try Again!",
                     JOptionPane.PLAIN_MESSAGE);
         }
+        if (outcome == 3) {
+            endGame();
+            frame.setVisible(false);
+//            frame.removeAll();
+//            state.resetComputerShips();
+//            state.resetGuesses();
+//            initNewGame();
+
+
+
+
+        }
+
+    }
+
+    public void endGame() {
+        tfield.setText(state.calculateWinner());
+        JOptionPane.showMessageDialog(frame,
+                "Game Over",
+                "Game Over!",
+                JOptionPane.PLAIN_MESSAGE);
+
+
     }
 
 
-    public void getColourOfPanel(JPanel panel, MouseEvent e) {
-        Color c = panel.getBackground();
-        System.out.println("color: " + c.toString());
-        //test to check colour has changed
-    }
 
 
     public void mouseClicked(MouseEvent e) {
@@ -149,20 +177,22 @@ public class PanelLocation extends JPanel implements MouseListener {//inheriting
         Panel panel = (Panel) e.getSource();
         displayEvent(state.getOutcome());
         while (true) {
-        if (!state.isValidGuess()) {
-            panel.setBackground(Color.RED);
-            log.info("Already guessed these coords");
-            System.out.println("You've already guessed this place");
-            break;
-        }if (state.isShipHit() == true) {
-            panel.setBackground(Color.BLACK);
-            log.info("Computer ship hit");
-            break;
-        } if (state.isValidGuess() == true && state.isShipHit() == false) {
+            if (!state.isValidGuess()) {
+                panel.setBackground(Color.RED);
+                log.info("Already guessed these coords");
+                System.out.println("You've already guessed this place");
+                break;
+            }
+            if (state.isShipHit() == true) {
+                panel.setBackground(Color.BLACK);
+                log.info("Computer ship hit");
+                break;
+            }
+            if (state.isValidGuess() == true && state.isShipHit() == false) {
                 panel.setBackground(Color.BLUE);
                 log.info("No ships hit");
                 break;
-        }
+            }
         }
     }
 
