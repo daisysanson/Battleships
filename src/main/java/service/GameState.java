@@ -12,6 +12,7 @@ public class GameState {
     Remove remove = new Remove();
 
     private boolean playerWinner;
+    private boolean isGameOver;
     private boolean validGuess;
     private boolean shipHit;
     private ArrayList<Guess> guesses = new ArrayList<>();
@@ -94,6 +95,7 @@ public class GameState {
         return (guesses.size() >= 2 || shipHit);
     }
 
+
     public String calculateWinner() {
         if (shipHit == true) {
             return "YOU WIN!";
@@ -109,14 +111,14 @@ public class GameState {
         this.playerWinner = playerWinner;
     }
 
-//    public ArrayList resetGuesses() {
-//        return remove.resetLists(guesses);
-//    }
-//
-//        public ArrayList resetComputerShips() {
-//            remove.resetLists(computerShips);
-//
-//        }
+    public void resetGuesses() {
+        remove.removeValues(guesses);
+        remove.removeValues(computerShips);
+        shipHit = false;
+        isGameOver = false;
+        validGuess = true;
+
+        }
     }
 
 

@@ -4,16 +4,29 @@ import entities.Guess;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Remove {
 
-    public ArrayList resetLists(ArrayList values) {
-        for (Object value : values) {
-            values.remove(value);
+
+    public ArrayList removeValues(ArrayList values) {
+        Iterator<Object> iter = values.iterator();
+
+        while (iter.hasNext()) {
+            Object value = iter.next();
+
+            if (values.size() > 0) {
+                iter.remove();
+
+            }
         }
         return values;
     }
 }
+
+
+
+
 
 
 

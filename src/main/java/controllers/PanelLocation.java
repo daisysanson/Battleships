@@ -43,8 +43,7 @@ public class PanelLocation extends JPanel implements MouseListener {//inheriting
         initComponents();
         initComputerShips(playerSelection.createComputerCoords());
         printPanelCompPoints(mainPanel);
-        revalidate();
-        repaint();
+
     }
 
 
@@ -146,17 +145,24 @@ public class PanelLocation extends JPanel implements MouseListener {//inheriting
         }
         if (outcome == 3) {
             endGame();
-            frame.setVisible(false);
-//            frame.removeAll();
-//            state.resetComputerShips();
-//            state.resetGuesses();
-//            initNewGame();
+            resetGame();
+
+
 
 
 
 
         }
 
+    }
+
+    public void resetGame(){
+        frame.setVisible(false);
+        frame.removeAll();
+        state.resetGuesses();
+        revalidate();
+        repaint();
+        initNewGame();
     }
 
     public void endGame() {
