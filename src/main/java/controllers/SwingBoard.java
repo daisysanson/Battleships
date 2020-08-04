@@ -10,12 +10,11 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.*;
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public class PanelLocation extends JPanel implements MouseListener {//inheriting JFrame
+public class SwingBoard extends JPanel implements MouseListener {//inheriting JFrame
     PlayerSelection playerSelection;
     GameState state;
     static Logger log = Logger.getLogger("Panel Location");
@@ -24,13 +23,13 @@ public class PanelLocation extends JPanel implements MouseListener {//inheriting
     private ArrayList<Point> computerPositions = new ArrayList<Point>();
     private JPanel mainPanel, footerPanel;
     private JFrame frame;
-    private int LENGTH = 10;
-    private int WIDTH = 10;
+    private final int LENGTH = 10;
+    private final int WIDTH = 10;
     private JPanel[][] panel = new JPanel[10][10];
     private JTextField tfield;
 
 
-    public PanelLocation(GameState state, PlayerSelection playerSelection) {
+    public SwingBoard(GameState state, PlayerSelection playerSelection) {
         this.playerSelection = playerSelection;
         this.state = state;
 
@@ -39,13 +38,15 @@ public class PanelLocation extends JPanel implements MouseListener {//inheriting
 
     }
 
-    public void initNewGame(){
+    public void initNewGame() {
+        log.info("New Game Generated");
         initComponents();
-        initComputerShips(playerSelection.createComputerCoords());
+        while (state.getComputerShips().size() < state.getNoOfComputerShips()) {
+            initComputerShips(playerSelection.createComputerCoords());
+        }
         printPanelCompPoints(mainPanel);
 
     }
-
 
 
     class Panel extends JPanel {
@@ -128,8 +129,9 @@ public class PanelLocation extends JPanel implements MouseListener {//inheriting
                     "You hit the computer's ship!",
                     "HIT!",
                     JOptionPane.PLAIN_MESSAGE);
-            endGame();
-
+            if (state.checkGameOver() == true) {
+                endGame();
+            }
         }
         if (outcome == 1) {
             JOptionPane.showMessageDialog(frame,
@@ -145,24 +147,29 @@ public class PanelLocation extends JPanel implements MouseListener {//inheriting
         }
         if (outcome == 3) {
             endGame();
-            resetGame();
-
-
-
-
-
-
         }
 
     }
 
-    public void resetGame(){
+    public void promptPlayAgain() {
+        int dialogButton = JOptionPane.YES_NO_OPTION;
+        if (JOptionPane.showConfirmDialog(null, "Do you want to play again?", "Play Again?",
+                JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            resetGame();
+        } else {
+            System.exit(0);
+        }
+    }
+
+
+    public void resetGame() {
+
         frame.setVisible(false);
         frame.removeAll();
-        state.resetGuesses();
+        GameState newGame = state.resetGuesses();
+        SwingBoard location = new SwingBoard(newGame, playerSelection);
         revalidate();
         repaint();
-        initNewGame();
     }
 
     public void endGame() {
@@ -171,11 +178,9 @@ public class PanelLocation extends JPanel implements MouseListener {//inheriting
                 "Game Over",
                 "Game Over!",
                 JOptionPane.PLAIN_MESSAGE);
-
+        promptPlayAgain();
 
     }
-
-
 
 
     public void mouseClicked(MouseEvent e) {
@@ -227,132 +232,3 @@ public class PanelLocation extends JPanel implements MouseListener {//inheriting
 
 
 }
-
-
-//        public void actionPerformed(ActionEvent e, int playerGuesses, int x, int y ) {
-//
-//            if (board[x][y] == 0) {
-//                cells[x][y].setBackground();
-//                board[x][y] = 0;
-//            }
-//
-//            //if the guess hit a computer
-//            if (board[x][y] == 1) {
-//                button[x][y].setBackground(Color.green);
-//                board[x][y] = -1;
-//            }
-//
-//            //if the guess hit a user
-//            if (board[x][y] == 3) {
-//                button[x][y].setBackground(Color.blue);
-//                board[x][y] = -1;
-//            }
-//
-//            playerGuesses++;
-//        }
-
-
-//        public void populateBoard(int shipSize, int shipDirection, int x, int y) {
-//            /** instance used for randomly placing the ships*/
-//
-//            /** used to tell the loop whether to keep trying to place the ship or not*/
-//            boolean cont = false;
-//
-//
-//            /** integer representing whethere a specific square is empty or not*/
-//            boolean isValid = true;
-//
-//
-//            while (!cont) {
-//                isValid = true;
-//
-//                if (shipDirection == 1) {
-//                    if (y + shipSize <= 7) {
-//                        for (int i = y; i < y + shipSize; i++) {
-//                            //square is already occupied
-//                            if (board[x][i] != 0) {
-//                                isValid = false;
-//                            }
-//                        }
-//
-//                        //ship can be placed here
-//                        if (isValid) {
-//                            for (int i = y; i < y + shipSize; i++) {
-//                                board[x][i] = shipSize;
-//                            }
-//                            return;
-//                        }
-//                    }
-//                }
-//
-//                //placed to the left
-//                {
-//                    if (shipDirection == 4) {
-//                        for (int i = y; i > y - shipSize; i--) {
-//                            //square is already occupied
-//                            if (board[x][i] != 0) {
-//                                isValid = false;
-//                            }
-//                        }
-//
-//                        //ship can be placed here
-//                        if (isValid) {
-//                            for (int i = y; i > y - shipSize; i--) {
-//
-//                                board[x][i] = shipSize;
-//
-//                            }
-//                            return;
-//                        }
-//                    }
-//                }
-//
-//            }
-//            //placed upward
-//            if (shipDirection == 3) {
-//                //both points are one the board
-//                if (x - shipSize >= 0) {
-//                    for (int i = x; i > x - shipSize; i--) {
-//                        //square is already occupied
-//                        if (board[i][y] != 0) {
-//                            isValid = false;
-//                        }
-//
-//                    }
-//
-//                    //ship can be placed here
-//                    if (isValid) {
-//                        for (int i = x; i > x - shipSize; i--) {
-//                            board[i][y] = shipSize;
-//
-//                        }
-//                        return;
-//                    }
-//                }
-//            }
-//
-//            //placed downward
-//            {
-//                if (shipDirection == 1) {
-//                    for (int i = x; i < x + shipSize; i++) {
-//                        //square is already occupied
-//                        if (board[i][y] != 0) {
-//                            isValid = false;
-//                        }
-//
-//                    }
-//
-//                    //ship can be placed here
-//                    if (isValid) {
-//                        for (int i = x; i < x + shipSize; i++) {
-//
-//                            board[i][y] = shipSize;
-//                        }
-//                        return;
-//                    }
-//                }
-//            }
-//        }
-//    }
-//
-//

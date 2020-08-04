@@ -4,20 +4,23 @@ import entities.ComputerShip;
 import entities.Guess;
 import entities.Ship;
 
-import java.awt.*;
+
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 public class GameState {
 
-    Remove remove = new Remove();
+    static Logger log = Logger.getLogger("Game state");
 
-    private boolean playerWinner;
-    private boolean isGameOver;
-    private boolean validGuess;
-    private boolean shipHit;
-    private ArrayList<Guess> guesses = new ArrayList<>();
-    private ArrayList<ComputerShip> computerShips = new ArrayList<>();
-    private ArrayList<Component> panels = new ArrayList<>();
+    Remove remove = new Remove();
+    private boolean playerWinner = false;
+    private boolean isGameOver = false;
+    private boolean validGuess = true;
+    private boolean shipHit = false;
+    private boolean shipClash = false;
+    private int noOfComputerShips = 2; //will be an option in later iteration
+    private ArrayList<Guess> guesses = new ArrayList<Guess>();
+    private ArrayList<ComputerShip> computerShips = new ArrayList<ComputerShip>();
 
     public GameState() {
     }
@@ -42,28 +45,50 @@ public class GameState {
         shipHit = false;
         if (!checkValidGuess(guess)) {
             validGuess = false;
-            System.out.println("Panel already selected");
         }
 
         if (checkShipHit(guess) == true) {
-            shipHit = true;
-            System.out.println("you've hit a ship!");
+
         }
         validGuess = true;
         guesses.add(guess);
     }
 
+    public void shipSunk(Ship ship) {
+        shipHit = true;
+        log.info("X: " + ship.getX() + "Y: " + ship.getY() + " has been removed.");
+        computerShips.remove(ship);
+    }
+
+
+    public ArrayList<Guess> getGuesses() {
+        return guesses;
+    }
+
     public ArrayList<ComputerShip> addComputerShips(ComputerShip ship) {
+        if (checkClashes(ship)) {
+            shipClash = true;
+
+
+        }
+
+
         computerShips.add(ship);
         return computerShips;
     }
 
 
+    public ArrayList<ComputerShip> getComputerShips() {
+        return computerShips;
+    }
+
     public boolean checkShipHit(Guess guess) {
-        for (Ship ship : computerShips) {
+        for (ComputerShip ship : computerShips) {
             if (!(guess.getX() == ship.getX() && guess.getY() == ship.getY())) {
                 return false;
             }
+            shipSunk(ship);
+            break;
         }
         return true;
     }
@@ -79,9 +104,15 @@ public class GameState {
     }
 
 
-    public ArrayList<Guess> getGuesses() {
-        return guesses;
+    public boolean checkClashes(Ship ship) {
+        for (Ship ship1 : computerShips) {
+            if ((ship1.getX() == (ship.getX()) && (ship1.getY() == ship.getY()))) {
+                return true;
+            }
+        }
+        return false;
     }
+
 
     public boolean isValidGuess() {
         return validGuess;
@@ -91,8 +122,10 @@ public class GameState {
         return shipHit;
     }
 
+
+
     public boolean checkGameOver() {
-        return (guesses.size() >= 2 || shipHit);
+        return (guesses.size() >= 6 || getComputerShips().size() == 0);
     }
 
 
@@ -107,62 +140,24 @@ public class GameState {
         return playerWinner;
     }
 
+
     public void setPlayerWinner(boolean playerWinner) {
         this.playerWinner = playerWinner;
     }
 
-    public void resetGuesses() {
-        remove.removeValues(guesses);
-        remove.removeValues(computerShips);
-        shipHit = false;
+    public GameState resetGuesses() {
         isGameOver = false;
-        validGuess = true;
-
-        }
+        GameState state = new GameState();
+        return state;
     }
 
 
+    public int getNoOfComputerShips() {
+        return noOfComputerShips;
+    }
+}
 
 
-
-
-//        (coordinatesSelected.contains(guess.getX()) && coordinatesSelected.contains(guess.getY())){
-//            return !validGuess;
-//        } else{
-//            return validGuess;
-//        }}
-
-
-
-//    public int shipDirection(int direction, Ship ship) {
-//        return direction;
-//    }
-//
-//    public int shipSize(int size, Ship ship) {
-//        return size;
-//    }
-
-//    public boolean isCompleteShip(Ship ship) {
-//        if ((directionEntered == true) && (coordsEntered == true) && (sizeEntered == true)) {
-//            userShips.add(ship);
-//            return completeShip = true;
-//        } else {
-//            return false;
-//        }
-//    }
-//}
-
-
-
-//    public boolean isValidDirection(Ship ship, Board board) {
-//        if ((x == -1) || (y == -1)) {
-//            System.out.print("This will cause the ship to appear out of the grid! Please pick another direction");
-//            removePlayerCoordinates(userSize, playerDirection, x, y);
-//            return false;
-//        } else {
-//            shipCounter++;
-//            return true;
-//        }
 
 
 

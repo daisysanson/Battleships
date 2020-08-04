@@ -1,6 +1,7 @@
 package service;
 
 import entities.Guess;
+import entities.Ship;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ import java.util.Iterator;
 public class Remove {
 
 
-    public ArrayList removeValues(ArrayList values) {
+    public ArrayList removeAllValues(ArrayList values) {
         Iterator<Object> iter = values.iterator();
 
         while (iter.hasNext()) {
@@ -23,11 +24,6 @@ public class Remove {
         return values;
     }
 }
-
-
-
-
-
 
 
 //    public void removeInValidGuess(Guess guess, ArrayList list){

@@ -21,13 +21,13 @@ public class Ship {
         this.size = size;
     }
 
-    public Ship(int xCoord, int yCoord){
+    public Ship(int xCoord, int yCoord) {
         this(xCoord, yCoord, 0, 0);
     }
 
 
-    public Ship(){}
-
+    public Ship() {
+    }
 
 
     public int getX() {
