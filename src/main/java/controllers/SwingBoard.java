@@ -110,7 +110,7 @@ public class SwingBoard extends JPanel implements MouseListener {//inheriting JF
     private void initComputerShips(int randomPanel) {
         int randomPanelX = mainPanel.getComponent(randomPanel).getX();
         int randomPanelY = mainPanel.getComponent(randomPanel).getY();
-        ComputerShip computerShip = (ComputerShip) playerSelection.createShip(randomPanelX, randomPanelY);
+        ComputerShip computerShip = playerSelection.createShip(randomPanelX, randomPanelY);
         state.addComputerShips(computerShip);
         System.out.println("X is: " + randomPanelX + "Y is: " + randomPanelY);
 
@@ -129,7 +129,7 @@ public class SwingBoard extends JPanel implements MouseListener {//inheriting JF
                     "You hit the computer's ship!",
                     "HIT!",
                     JOptionPane.PLAIN_MESSAGE);
-            if (state.checkGameOver() == true) {
+            if (state.checkGameOver()) {
                 endGame();
             }
         }
@@ -194,12 +194,12 @@ public class SwingBoard extends JPanel implements MouseListener {//inheriting JF
                 System.out.println("You've already guessed this place");
                 break;
             }
-            if (state.isShipHit() == true) {
+            if (state.isShipHit()) {
                 panel.setBackground(Color.BLACK);
                 log.info("Computer ship hit");
                 break;
             }
-            if (state.isValidGuess() == true && state.isShipHit() == false) {
+            if (state.isValidGuess() && !state.isShipHit()) {
                 panel.setBackground(Color.BLUE);
                 log.info("No ships hit");
                 break;

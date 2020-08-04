@@ -46,8 +46,9 @@ public class GameState {
         if (!checkValidGuess(guess)) {
             validGuess = false;
 
-        }
-        if (checkShipHit(guess)) {
+        }if (checkShipHit(guess)) {
+            shipHit = true;
+
 
         }
         if (checkValidGuess(guess)) {
@@ -131,7 +132,7 @@ public class GameState {
 
 
     public String calculateWinner() {
-        if (shipHit == true) {
+        if (shipHit) {
             return "YOU WIN!";
         }
         return "YOU LOSE!";

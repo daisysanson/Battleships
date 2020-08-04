@@ -18,7 +18,9 @@ public class ComputerShip extends Ship {
     }
 
     public ComputerShip() {
+
     }
+
 
     public int randomPanelGenerator() {
         int size = 100;

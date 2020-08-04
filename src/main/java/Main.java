@@ -3,7 +3,7 @@ import controllers.PlayerSelection;
 
 import service.GameState;
 
-import javax.swing.*;
+import javax.swing.SwingUtilities;
 
 public class Main {
 

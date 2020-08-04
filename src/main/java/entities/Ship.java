@@ -28,6 +28,7 @@ public class Ship {
     }
 
 
+
     public int getX() {
         return x;
     }
