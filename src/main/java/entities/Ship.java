@@ -1,8 +1,6 @@
 package entities;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class Ship {
     private int x;
@@ -21,8 +19,8 @@ public class Ship {
         this.size = size;
     }
 
-    public Ship(int xCoord, int yCoord) {
-        this(xCoord, yCoord, 0, 0);
+    public Ship(int x, int y) {
+        this(x, y, 0, 0);
     }
 
 

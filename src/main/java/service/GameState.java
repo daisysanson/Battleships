@@ -45,14 +45,17 @@ public class GameState {
         shipHit = false;
         if (!checkValidGuess(guess)) {
             validGuess = false;
-        }
-
-        if (checkShipHit(guess) == true) {
 
         }
-        validGuess = true;
-        guesses.add(guess);
+        if (checkShipHit(guess)) {
+
+        }
+        if (checkValidGuess(guess)) {
+            validGuess = true;
+            guesses.add(guess);
+        }
     }
+
 
     public void shipSunk(Ship ship) {
         shipHit = true;
@@ -65,7 +68,7 @@ public class GameState {
         return guesses;
     }
 
-    public ArrayList<ComputerShip> addComputerShips(ComputerShip ship) {
+    public void addComputerShips(ComputerShip ship) {
         if (checkClashes(ship)) {
             shipClash = true;
 
@@ -74,7 +77,6 @@ public class GameState {
 
 
         computerShips.add(ship);
-        return computerShips;
     }
 
 
@@ -121,7 +123,6 @@ public class GameState {
     public boolean isShipHit() {
         return shipHit;
     }
-
 
 
     public boolean checkGameOver() {

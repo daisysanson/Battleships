@@ -3,11 +3,8 @@ package controllers;
 
 import entities.ComputerShip;
 import entities.Guess;
-import service.GameState;
 
 public class PlayerSelection {
-    private SwingBoard SwingBoard;
-    GameState state = new GameState();
 
 
     public void getGuess(Guess guess) {
