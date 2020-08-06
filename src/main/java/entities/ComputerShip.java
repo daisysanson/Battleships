@@ -1,32 +1,44 @@
 package entities;
+
+import java.util.ArrayList;
 import java.util.Random;
 
 
-
-public class ComputerShip extends Ship  {
-
+public class ComputerShip extends Ship {
     private Random rand = new Random();
-    private final long seed = 42;
 
-
-
-
-    public int randomCoordGenerator(){
-        rand.setSeed(seed);
-        int coord = Math.abs(rand.nextInt() % (10 - 1));
-        return coord;
-
+    public ComputerShip(int x, int y, int direction, int size) {
+        super(x, y, direction, size);
     }
 
-    public int randomNumberGenerator(){
-        rand.setSeed(seed);
-        int random = Math.abs(rand.nextInt() % (1 - 4));
-        return random;
+    public ComputerShip(int x, int y) {
+        super(x, y);
+    }
+
+    public ComputerShip() {
 
     }
 
 
+    public int randomPanelGenerator() {
+        int size = 100;
 
+        ArrayList<Integer> list = new ArrayList<Integer>(size);
+        for (int i = 1; i <= size; i++) {
+            list.add(i);
+        }
+
+        Random rand = new Random();
+        int index = rand.nextInt(list.size());
+        list.remove(index);
+
+        return index;
     }
+
+
+    public void randomNumberGenerator() {
+    }
+
+}
 
 
