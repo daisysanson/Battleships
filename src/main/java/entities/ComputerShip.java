@@ -6,8 +6,6 @@ import java.util.Random;
 
 public class ComputerShip extends Ship {
     private Random rand = new Random();
-    private int oldValue;
-
 
     public ComputerShip(int x, int y, int direction, int size) {
         super(x, y, direction, size);

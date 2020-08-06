@@ -6,17 +6,8 @@ import entities.Guess;
 
 public class PlayerSelection {
 
-
-    public void getGuess(Guess guess) {
-        System.out.println("X coord : " + guess.getX());
-        System.out.println("Y coord : " + guess.getY());
-
-    }
-
-
     public Guess createGuess(int x, int y) {
         Guess guess = new Guess(x, y);
-        getGuess(guess);
         return guess;
     }
 

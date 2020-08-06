@@ -1,5 +1,6 @@
 package service;
 
+import common.Outcomes;
 import entities.ComputerShip;
 import entities.Guess;
 import entities.Ship;
@@ -12,7 +13,7 @@ public class GameState {
 
     static Logger log = Logger.getLogger("Game state");
 
-    Remove remove = new Remove();
+    private Guess guess;
     private boolean playerWinner = false;
     private boolean isGameOver = false;
     private boolean validGuess = true;
@@ -25,28 +26,36 @@ public class GameState {
     public GameState() {
     }
 
-
-    public int getOutcome() {
+    public Outcomes getOutcome(Guess guess) {
         boolean isGameOver = checkGameOver();
-        if (isShipHit()) {
-            return 0;
+        {
+            if (isShipHit())
+                return Outcomes.HIT;
         }
         if (!isValidGuess()) {
-            return 2;
+            return Outcomes.INVALID;
         }
         if (isGameOver) {
-            return 3;
+            return Outcomes.GAME_OVER;
         }
-        return 1;
+        return Outcomes.MISS;
     }
 
+    public Guess getGuess() {
+        return guess;
+    }
+
+    public void setGuess(Guess guess) {
+        this.guess = guess;
+    }
 
     public void addCoords(Guess guess) {
         shipHit = false;
         if (!checkValidGuess(guess)) {
             validGuess = false;
 
-        }if (checkShipHit(guess)) {
+        }
+        if (checkShipHit(guess)) {
             shipHit = true;
 
 
@@ -55,11 +64,11 @@ public class GameState {
             validGuess = true;
             guesses.add(guess);
         }
+
     }
 
 
     public void shipSunk(Ship ship) {
-        shipHit = true;
         log.info("X: " + ship.getX() + "Y: " + ship.getY() + " has been removed.");
         computerShips.remove(ship);
     }
