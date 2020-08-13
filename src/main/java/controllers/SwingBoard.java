@@ -46,10 +46,10 @@ public class SwingBoard extends JPanel implements MouseListener {
     }
 
     private void initNewGame() {
-        log.info("New Game Generated");
+        log.info("------------------------- New Game Generated---------------------------");
         initComponents();
         while (state.getComputerShips().size() < state.getNoOfComputerShips()) {
-            initComputerShips(playerSelection.createComputerCoords());
+            initComputerShips(playerSelection.generateComputerPanel());
         }
         printPanelCompPoints(mainPanel);
 
@@ -113,11 +113,19 @@ public class SwingBoard extends JPanel implements MouseListener {
     }
 
 
-    private void initComputerShips(int randomPanel) {
+    private void initComputerShips(int randomPanel){
+
         int randomPanelX = mainPanel.getComponent(randomPanel).getX();
         int randomPanelY = mainPanel.getComponent(randomPanel).getY();
         ComputerShip computerShip = playerSelection.createShip(randomPanelX, randomPanelY);
         state.addComputerShips(computerShip);
+
+        int seqPanel = playerSelection.generateSideShip(randomPanel);
+        int seqPanelX = mainPanel.getComponent(seqPanel).getX();
+        int seqPanelY = mainPanel.getComponent(seqPanel).getY();
+        ComputerShip computerShip1 = playerSelection.createShip(seqPanelX, seqPanelY);
+        state.addComputerShips(computerShip1);
+
         System.out.println("X is: " + randomPanelX + "Y is: " + randomPanelY);
 
 

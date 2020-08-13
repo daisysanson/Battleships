@@ -6,6 +6,7 @@ import entities.Guess;
 import entities.Ship;
 
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
@@ -19,7 +20,7 @@ public class GameState {
     private boolean validGuess = true;
     private boolean shipHit = false;
     private boolean shipClash = false;
-    private int noOfComputerShips = 2; //will be an option in later iteration
+    private int noOfComputerShips = 4; //will be an option in later iteration
     private ArrayList<Guess> guesses = new ArrayList<Guess>();
     private ArrayList<ComputerShip> computerShips = new ArrayList<ComputerShip>();
 
@@ -81,14 +82,15 @@ public class GameState {
     public void addComputerShips(ComputerShip ship) {
         if (checkClashes(ship)) {
             shipClash = true;
+            return;
 
 
         }
 
-
+        log.info("Ship at x: " + ship.getX() + "and Y" + ship.getY() + " added");
         computerShips.add(ship);
     }
-
+//fix sship clas and amke big ship object , add user ship then done!
 
     public ArrayList<ComputerShip> getComputerShips() {
         return computerShips;
@@ -136,7 +138,7 @@ public class GameState {
 
 
     public boolean checkGameOver() {
-        return (guesses.size() >= 6 || getComputerShips().size() == 0);
+        return (guesses.size() >= 100 || getComputerShips().size() == 0);
     }
 
 

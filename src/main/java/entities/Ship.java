@@ -7,7 +7,6 @@ public class Ship {
     private int y;
     private int direction;
     private int shipCounter;
-    public HashMap<Integer, String> shipsType = new HashMap<Integer, String>();
     public int size;
     private boolean completeShip;
 
@@ -53,18 +52,6 @@ public class Ship {
         this.direction = direction;
     }
 
-    public HashMap<Integer, String> getShipsType() {
-        return shipsType;
-    }
-
-    private void setShipType() {
-        shipsType.put(5, "Carrier");
-        shipsType.put(4, "Battleship");
-        shipsType.put(3, "Destroyer");
-        shipsType.put(2, "Submarine");
-        shipsType.put(1, "Patrol Boat");
-        this.shipsType = shipsType;
-    }
 
 
     public boolean isCompleteShip() {
@@ -79,9 +66,6 @@ public class Ship {
         return size;
     }
 
-    public void setShipsType(HashMap<Integer, String> shipsType) {
-        this.shipsType = shipsType;
-    }
 
     public void setShipSize(int shipSize) {
         this.size = shipSize;
