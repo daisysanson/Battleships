@@ -12,6 +12,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import java.awt.event.MouseMotionAdapter;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 
@@ -60,6 +61,7 @@ public class SwingBoard extends JPanel implements MouseListener {
 //    }
 
     private void initAI() {
+
         initComponents();
 
 //        while (state.getComputerShips().size() < state.getNoOfComputerShips()) {
@@ -175,8 +177,9 @@ public class SwingBoard extends JPanel implements MouseListener {
 //    }
 
     private Guess initComputerGuess() {
-        int randomPanel = playerSelection.generateComputerPanel();
-        log.info("Computer's guess panel is " + panel);
+       ArrayList list =  playerSelection.initList();
+        int randomPanel = playerSelection.generateComputerPanel(list);
+        log.info("Computer's guess panel is " + randomPanel);
         int randomPanelX = mainPanel.getComponent(randomPanel).getX();
         int randomPanelY = mainPanel.getComponent(randomPanel).getY();
         Guess computerGuess = playerSelection.createGuess(randomPanelX, randomPanelY);
@@ -215,7 +218,7 @@ public class SwingBoard extends JPanel implements MouseListener {
                 break;
             case MISS:
                 JOptionPane.showMessageDialog(frame,
-                        "You missed!",
+                        "Miss",
                         "Miss!",
                         JOptionPane.PLAIN_MESSAGE);
                 break;
@@ -232,6 +235,7 @@ public class SwingBoard extends JPanel implements MouseListener {
                 break;
         }
         playerPrompt();
+
     }
 
     public void promptPlayAgain() {
@@ -322,12 +326,17 @@ public class SwingBoard extends JPanel implements MouseListener {
                 userShips++;
             } else {
                 setUpMode = true;
+                playerPrompt();
             }
         }
+
     }
 
 
     public void mouseReleased(MouseEvent e) {
+        if (setUpMode) {
+            computerTurn();
+        }
 
 
     }///need to stop

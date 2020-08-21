@@ -17,7 +17,7 @@ public class ComputerShip extends Ship {
     }
 
     public ArrayList<Integer> listOfComputerPanels() {
-        int size = 2;
+        int size = 3;
         ArrayList<Integer> list = new ArrayList<Integer>(size);
         for (int i = 1; i <= size; i++) {
             list.add(i);
@@ -28,8 +28,8 @@ public class ComputerShip extends Ship {
 
 
     public int randomComputerPanelGenerator(ArrayList list) {
-        if (list.size() == 0) {
-            list = listOfComputerPanels();
+        if (list.size() == 0 ){
+            listOfComputerPanels();
         }
         Random rand = new Random();
         int index = rand.nextInt(list.size());

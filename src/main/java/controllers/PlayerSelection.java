@@ -25,8 +25,13 @@ public class PlayerSelection {
     }
 
 
-    public int generateComputerPanel() {
+    public ArrayList<Integer> initList(){
         ArrayList<Integer> list = computerShip2.listOfComputerPanels();
+        return list;
+
+    }
+
+        public int generateComputerPanel(ArrayList list) {
         int randomPanel = computerShip2.randomComputerPanelGenerator(list);
         return randomPanel;
     }
