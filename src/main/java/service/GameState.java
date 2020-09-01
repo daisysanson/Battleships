@@ -1,7 +1,4 @@
 package service;
-///MAKE COMPUTERE TURNS ONE AT A TIME - IT JUST FIRES THEM OFFF
-
-import com.sun.tools.internal.xjc.reader.xmlschema.bindinfo.BIConversion.User;
 import common.Outcomes;
 
 import entities.ComputerShip;
@@ -9,8 +6,6 @@ import entities.Guess;
 import entities.Ship;
 import entities.UserShip;
 
-
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.logging.Logger;
@@ -26,10 +21,10 @@ public class GameState {
     private boolean isGameOver = false;
     private boolean validGuess = true;
     private boolean computerShipHit = false;
-    private boolean userShipHit = true;
+    private boolean userShipHit = false;
     private boolean shipClash = false;
-    private int noOfComputerShips = 0;
-    private int noOfPlayerShips = 2;
+    private int noOfComputerShips = 1;
+    private int noOfPlayerShips = 1;
     private ArrayList<Guess> userGuesses = new ArrayList<Guess>();
     private ArrayList<Guess> computerGuesses = new ArrayList<Guess>();
     private ArrayList<ComputerShip> computerShips = new ArrayList<ComputerShip>();
@@ -55,11 +50,9 @@ public class GameState {
         if (isGameOver) {
             return Outcomes.GAME_OVER;
 
-        }
-        if (!isUserShipHit()) {
+        } else {
             return Outcomes.MISS;
         }
-        return Outcomes.USERHIT;
     }
 
 
@@ -75,12 +68,10 @@ public class GameState {
         computerShipHit = false;
         if (!checkUserValidGuess(guess)) {
             validGuess = false;
-
         }
-//                if (checkComputerShipHit(guess)) {
-//                        computerShipHit = true;
-
-
+        if (checkComputerShipHit(guess)) {
+            computerShipHit = true;
+        }
         if (checkUserValidGuess(guess)) {
             validGuess = true;
             userGuesses.add(guess);
@@ -93,16 +84,28 @@ public class GameState {
     }
 
 
-//        public boolean checkComputerShipHit(Guess guess) {
-//                for (ComputerShip ship : computerShips) {
-//                        if (!(guess.getX() == ship.getX() && guess.getY() == ship.getY())) {
-//                                return false;
-//                        }
-//                        computerShipSunk(ship);
-//                        break;
-//                }
-//                return true;
-//        }
+    public boolean checkComputerShipHit(Guess guess) {
+        ArrayList<ComputerShip> matchingShip = new ArrayList<>();
+        Iterator<ComputerShip> it = computerShips.iterator();
+        while (it.hasNext()) {
+            ComputerShip ship = it.next();
+            {
+                if ((guess.getX() == ship.getX() && guess.getY() == ship.getY()))
+                    matchingShip.add(ship);
+            }
+        }
+        if (matchingShip.size() >= 1) {
+            for (ComputerShip ship1 : matchingShip) {
+                if ((guess.getX() == ship1.getX() && guess.getY() == ship1.getY())) {
+                    computerShipSunk(ship1);
+                }
+            }
+            return true;
+
+        }
+
+        return false;
+    }
 
 
     public boolean checkUserValidGuess(Guess guess) {
@@ -118,15 +121,17 @@ public class GameState {
 
 
     public void addComputerGuess(Guess guess) {
+        computerShipHit = false;
         userShipHit = false;
         if (!checkComputerValidGuess(guess)) {
             validGuess = false;
         }
         if (checkUserShipHit(guess)) {
             userShipHit = true;
+        }
             computerGuesses.add(guess);
         }
-    }
+
 
 
     public boolean checkUserShipHit(Guess guess) {
@@ -134,10 +139,10 @@ public class GameState {
         Iterator<UserShip> it = userShips.iterator();
         while (it.hasNext()) {
             UserShip ship = it.next();
-            {
-                if ((guess.getX() == ship.getX() && guess.getY() == ship.getY()))
-                    matchingShip.add(ship);
+            if ((guess.getX() == ship.getX() && guess.getY() == ship.getY())) {
+                matchingShip.add(ship);
             }
+
         }
         if (matchingShip.size() >= 1) {
             for (UserShip ship1 : matchingShip) {
@@ -149,20 +154,9 @@ public class GameState {
 
         }
 
-     return false;
+        return false;
 
-}
-
-//
-//
-//   public boolean checkUserShipHit(Guess guess) {
-//       ArrayList<Guess> noMatch = new ArrayList<>();
-//       for (UserShip ship : userShips)
-//           if (!(guess.getX() == ship.getX() && guess.getY() == ship.getY())) { }
-//                        return false;
-//                }
-//                return true;
-//        }
+    }
 
 
     public boolean checkComputerValidGuess(Guess guess) {
@@ -191,17 +185,14 @@ public class GameState {
         return computerGuesses;
     }
 
-//        public void addComputerShips(ComputerShip ship){
-//        if(checkComputerShipClashes(ship)||(checkUserShipClashes(ship))){
-//        shipClash=true;
-//        return;
-//
-//
-//        }
-//
-//        log.info("Ship at x: "+ship.getX()+"and Y"+ship.getY()+" added");
-//        computerShips.add(ship);
-//        }
+    public void addComputerShips(ComputerShip ship) {
+        if (checkComputerShipClashes(ship) || (checkUserShipClashes(ship))) {
+            shipClash = true;
+            return;
+        }
+        log.info("Computer Ship at x: " + ship.getX() + "and computer ship Y: " + ship.getY() + " added");
+        computerShips.add(ship);
+    }
 
 
     public ArrayList<UserShip> getUserShips() {
@@ -266,12 +257,12 @@ public class GameState {
     }
 
     public boolean checkGameOver() {
-        return (getUserShips().size() == 0);
+        return (getUserShips().size() == 0)  || userGuesses.size() == 5 || getComputerShips().size() == 0;
     }
 
 
     public String calculateWinner() {
-        if (noOfComputerShips == 0) {
+        if (computerShips.size() == 0) {
             return "YOU WIN!";
         }
         return "YOU LOSE!";
@@ -286,7 +277,7 @@ public class GameState {
         this.playerWinner = playerWinner;
     }
 
-    public GameState resetGuesses() {
+    public GameState resetGame() {
         isGameOver = false;
         GameState state = new GameState();
         return state;

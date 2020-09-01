@@ -11,7 +11,6 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
@@ -24,6 +23,7 @@ public class SwingBoard extends JPanel implements MouseListener {
     private Logger log = Logger.getLogger("Panel Location");
     private PlayerSelection playerSelection;
     private GameState state;
+    private ArrayList list;
     private JPanel mainPanel, footerPanel;
     private JFrame frame;
     private int clicked = 0;
@@ -40,34 +40,21 @@ public class SwingBoard extends JPanel implements MouseListener {
     public SwingBoard(GameState state, PlayerSelection playerSelection) {
         this.playerSelection = playerSelection;
         this.state = state;
+        this.list = playerSelection.initList();
 
-            initPlayerShips();
-            initAI();
-
-
-
+        log.info("--------------------New Game!----------------------");
+        setUpMode = false;
+        initPlayerShips();
+        initComponents();
+        printPanelCompPoints(mainPanel);
 
 
     }
 
-
-//    private void initAI() {
-//        initComponents();
-//
-//        while (state.getComputerShips().size() < state.getNoOfComputerShips()) {
-//            initComputerShips(playerSelection.generateComputerPanel());
-//        }
-//        printPanelCompPoints(mainPanel);
-//    }
-
     private void initAI() {
-
-        initComponents();
-
-//        while (state.getComputerShips().size() < state.getNoOfComputerShips()) {
-//            initComputerShips(playerSelection.generateComputerPanel());
-//        }
-        printPanelCompPoints(mainPanel);
+        while (state.getComputerShips().size() < state.getNoOfComputerShips()) {
+            initComputerShips(playerSelection.generateComputerPanel(list));
+        }
     }
 
     ;
@@ -81,12 +68,6 @@ public class SwingBoard extends JPanel implements MouseListener {
         }
     }
 
-//    public class DragMouseAdapter extends MouseMotionAdapter {
-//        @Override
-//        public void mouseDragged(MouseEvent e) {
-//            System.out.println("Mouse dragged on source: " + e.getSource());
-//        }
-//    }
 
     private void initComponents() {
         int height = 800 * 2 / 3;
@@ -146,11 +127,16 @@ public class SwingBoard extends JPanel implements MouseListener {
                 "Computer will now guess",
                 "Aiming...",
                 JOptionPane.PLAIN_MESSAGE);
-        Guess computerGuess = initComputerGuess();
+        Guess computerGuess = initComputerGuess(list);
+        state.setGuess(computerGuess);
+        Outcomes outcome = state.getOutcome(computerGuess);
         displayEvent(state.getOutcome(computerGuess));
+        computerTurn = false;
+        checkTurn();
 
 
     }
+
 
     private void playerPrompt() {
         JOptionPane.showMessageDialog(frame,
@@ -160,24 +146,22 @@ public class SwingBoard extends JPanel implements MouseListener {
     }
 
 
-    public int detectMouseClicked(MouseEvent e) {
-        clicked++;
-
-        return clicked;
-
+    public void checkTurn() {
+        if (!computerTurn) {
+            playerPrompt();
+        }
     }
 
 
-//    private void initComputerShips(int randomPanel) {
+    private void initComputerShips(int randomPanel) {
+        int randomPanelX = mainPanel.getComponent(randomPanel).getX();
+        int randomPanelY = mainPanel.getComponent(randomPanel).getY();
+        ComputerShip computerShip = (ComputerShip) playerSelection.createShip(randomPanelX, randomPanelY);
+        log.info("Computer Ship panel is: " + randomPanel);
+        state.addComputerShips(computerShip);
+    }
 
-//        int randomPanelX = mainPanel.getComponent(randomPanel).getX();
-//        int randomPanelY = mainPanel.getComponent(randomPanel).getY();
-//        ComputerShip computerShip = (ComputerShip) playerSelection.createShip(randomPanelX, randomPanelY);
-//        state.addComputerShips(computerShip);
-//    }
-
-    private Guess initComputerGuess() {
-       ArrayList list =  playerSelection.initList();
+    private Guess initComputerGuess(ArrayList list) {
         int randomPanel = playerSelection.generateComputerPanel(list);
         log.info("Computer's guess panel is " + randomPanel);
         int randomPanelX = mainPanel.getComponent(randomPanel).getX();
@@ -234,9 +218,9 @@ public class SwingBoard extends JPanel implements MouseListener {
                 endGame();
                 break;
         }
-        playerPrompt();
 
     }
+
 
     public void promptPlayAgain() {
         if (JOptionPane.showConfirmDialog(null, "Do you want to play again?", "Play Again?",
@@ -251,10 +235,11 @@ public class SwingBoard extends JPanel implements MouseListener {
     public void resetGame() {
         frame.setVisible(false);
         frame.removeAll();
-        GameState newGame = state.resetGuesses();
+        GameState newGame = state.resetGame();
         SwingBoard location = new SwingBoard(newGame, playerSelection);
         revalidate();
         repaint();
+
     }
 
     public void endGame() {
@@ -265,16 +250,19 @@ public class SwingBoard extends JPanel implements MouseListener {
                 JOptionPane.PLAIN_MESSAGE);
         promptPlayAgain();
 
+
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (setUpMode) {
+        if (setUpMode) { //if it is false
             log.info("mouse clicked method called");
             Panel panel = (Panel) e.getSource();
             Guess currentGuess = state.getGuess();
             displayEvent(state.getOutcome(currentGuess));
             Outcomes outcome = state.getOutcome(currentGuess);
+            userTurn = false;
+            computerTurn = true;
 
             if (outcome.equals(Outcomes.INVALID)) {
                 panel.setBackground(Color.BLACK);
@@ -298,8 +286,10 @@ public class SwingBoard extends JPanel implements MouseListener {
                 log.info("No ships hit");
                 return;
             }
-        } else {
 
+
+        } else {
+        return;
 
         }
     }
@@ -308,16 +298,15 @@ public class SwingBoard extends JPanel implements MouseListener {
     @Override
     public void mousePressed(MouseEvent e) {
         if (setUpMode) { //if false
-
+            userTurn = true;
             JPanel panel = (JPanel) e.getSource();
             Guess guess = playerSelection.createGuess(panel.getX(), panel.getY());
             state.addUserGuess(guess);
             state.setGuess(guess);
             getWhichButtonGotPressed(panel.getX(), panel.getY());
             repaint();
-            userTurn = true;
-
-
+            mouseClicked(e);
+            mouseReleased(e);
         } else {
             if (userShips < MAX_USER_SHIPS) {
                 JPanel panel1 = (JPanel) e.getSource();
@@ -325,8 +314,10 @@ public class SwingBoard extends JPanel implements MouseListener {
                 state.addPlayerShips(userShip);
                 userShips++;
             } else {
+                initAI();
                 setUpMode = true;
                 playerPrompt();
+
             }
         }
 
@@ -335,7 +326,9 @@ public class SwingBoard extends JPanel implements MouseListener {
 
     public void mouseReleased(MouseEvent e) {
         if (setUpMode) {
-            computerTurn();
+            if (computerTurn == true && userTurn == false) {
+                computerTurn();
+            }
         }
 
 
