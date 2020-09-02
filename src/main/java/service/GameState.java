@@ -115,6 +115,12 @@ public class GameState {
             }
 
         }
+        for (UserShip ship : userShips ){
+            if((guess.getX() == ship.getX() && (guess.getY() == ship.getY()))){
+                return false;
+            }
+
+        }
         return true;
 
     }
@@ -236,14 +242,6 @@ public class GameState {
     }
 
 
-    public int getNoOfPlayerShips() {
-        return noOfPlayerShips;
-    }
-
-    public void setNoOfPlayerShips(int noOfPlayerShips) {
-        this.noOfPlayerShips = noOfPlayerShips;
-    }
-
     public boolean isValidGuess() {
         return validGuess;
     }
@@ -267,15 +265,7 @@ public class GameState {
         }
         return "YOU LOSE!";
     }
-
-    public boolean isPlayerWinner() {
-        return playerWinner;
-    }
-
-
-    public void setPlayerWinner(boolean playerWinner) {
-        this.playerWinner = playerWinner;
-    }
+    
 
     public GameState resetGame() {
         isGameOver = false;
