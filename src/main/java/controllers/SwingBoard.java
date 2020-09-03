@@ -122,8 +122,6 @@ public class SwingBoard extends JPanel implements MouseListener {
     }
 
 
-
-
     private void playerPrompt() {
         JOptionPane.showMessageDialog(frame,
                 "Take a guess",
@@ -161,7 +159,7 @@ public class SwingBoard extends JPanel implements MouseListener {
         return computerGuess;
     }
 
-    private int setComputerPanel(int computerPanel){
+    private int setComputerPanel(int computerPanel) {
         return this.computerPanel = computerPanel;
     }
 
@@ -204,8 +202,6 @@ public class SwingBoard extends JPanel implements MouseListener {
     }
 
 
-
-
     private void displayEvent(Outcomes outcome) {
         switch (outcome) {
             case HIT:
@@ -213,10 +209,6 @@ public class SwingBoard extends JPanel implements MouseListener {
                         "You hit the computer's ship!",
                         "HIT!",
                         JOptionPane.PLAIN_MESSAGE);
-                if (state.checkGameOver()) {
-                    endGame();
-                    return;
-                }
                 break;
             case USERHIT:
                 JOptionPane.showMessageDialog(frame,
@@ -254,6 +246,7 @@ public class SwingBoard extends JPanel implements MouseListener {
         if (JOptionPane.showConfirmDialog(null, "Do you want to play again?", "Play Again?",
                 JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
             resetGame();
+            return;
         } else {
             System.exit(0);
         }
@@ -267,6 +260,7 @@ public class SwingBoard extends JPanel implements MouseListener {
         SwingBoard location = new SwingBoard(newGame, playerSelection);
         revalidate();
         repaint();
+        return;
 
     }
 
@@ -289,37 +283,45 @@ public class SwingBoard extends JPanel implements MouseListener {
             Guess currentGuess = state.getGuess();
             displayEvent(state.getOutcome(currentGuess));
             Outcomes outcome = state.getOutcome(currentGuess);
-            userTurn = false;
-            computerTurn = true;
+            if (state.checkGameOver()) {
+                endGame();
+                return;
+            } else{ //old state being retained
+                userTurn = false;
+                computerTurn = true;
 
-            if (outcome.equals(Outcomes.INVALID)) {
-                panel.setBackground(Color.BLACK);
-                log.info("Already guessed these coords/ships are here");
-                System.out.println("Invalid Guess! You've already guessed this or your own ships are here");
-                return;
+                if (outcome.equals(Outcomes.INVALID)) {
+                    panel.setBackground(Color.BLACK);
+                    log.info("Already guessed these coords/ships are here");
+                    System.out.println("Invalid Guess! You've already guessed this or your own ships are here");
+                    return;
+                }
+                if (outcome.equals(Outcomes.USERHIT)) {
+                    panel.setBackground(Color.BLACK);
+                    log.info("User ship Hit");
+                    System.out.println("You're ship has been hit!");
+                    return;
+                }
+                if (outcome.equals(Outcomes.HIT)) {
+                    panel.setBackground(Color.RED);
+                    log.info("Computer Ship hit");
+                    return;
+                }
+                if (outcome.equals(Outcomes.MISS)) {
+                    panel.setBackground(Color.BLUE);
+                    log.info("No ships hit");
+                    return;
+                }
             }
-            if (outcome.equals(Outcomes.USERHIT)) {
-                panel.setBackground(Color.BLACK);
-                log.info("User ship Hit");
-                System.out.println("You're ship has been hit!");
-                return;
-            }
-            if (outcome.equals(Outcomes.HIT)) {
-                panel.setBackground(Color.RED);
-                log.info("Computer Ship hit");
-                return;
-            }
-            if (outcome.equals(Outcomes.MISS)) {
-                panel.setBackground(Color.BLUE);
-                log.info("No ships hit");
-                return;
-            }
-        } else {
-            JPanel panel1 = (JPanel) e.getSource(); //setting colour of player ships
-            panel1.setBackground(Color.GREEN);
+            } else{
+                JPanel panel1 = (JPanel) e.getSource(); //setting colour of player ships
+                panel1.setBackground(Color.GREEN);
 
+            }
         }
-    }
+
+
+
 
 
     @Override

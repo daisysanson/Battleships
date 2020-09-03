@@ -15,7 +15,7 @@ public class GameState {
     static Logger log = Logger.getLogger("Game state");
 
     private Guess guess;
-    private Guess debugGuess;
+//    private Guess debugGuess;
 
     private boolean playerWinner = false;
     private boolean isGameOver = false;
@@ -265,10 +265,9 @@ public class GameState {
         }
         return "YOU LOSE!";
     }
-    
+
 
     public GameState resetGame() {
-        isGameOver = false;
         GameState state = new GameState();
         return state;
     }
