@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 public class SwingBoard extends JPanel implements MouseListener {
     private static final int PANEL_LENGTH = 10;
     private static final int PANEL_WIDTH = 10;
-    private static final int MAX_USER_SHIPS = 2;
+    private static final int MAX_USER_SHIPS = 10;
 
     private Logger log = Logger.getLogger("Panel Location");
     private PlayerSelection playerSelection;
@@ -27,7 +27,7 @@ public class SwingBoard extends JPanel implements MouseListener {
     private JPanel mainPanel, footerPanel;
     private JFrame frame;
     private int computerPanel;
-    private int userShips = 0;
+    private int userShips = 6;
     private boolean setUpMode = false;
     private boolean userTurn = false;
     private boolean computerTurn = false;
@@ -283,10 +283,12 @@ public class SwingBoard extends JPanel implements MouseListener {
             Guess currentGuess = state.getGuess();
             displayEvent(state.getOutcome(currentGuess));
             Outcomes outcome = state.getOutcome(currentGuess);
+
             if (state.checkGameOver()) {
                 endGame();
                 return;
-            } else{ //old state being retained
+
+            } else {
                 userTurn = false;
                 computerTurn = true;
 
@@ -313,15 +315,12 @@ public class SwingBoard extends JPanel implements MouseListener {
                     return;
                 }
             }
-            } else{
-                JPanel panel1 = (JPanel) e.getSource(); //setting colour of player ships
-                panel1.setBackground(Color.GREEN);
+        } else {
+            JPanel panel1 = (JPanel) e.getSource(); //setting colour of player ships
+            panel1.setBackground(Color.GREEN);
 
-            }
         }
-
-
-
+    }
 
 
     @Override
@@ -360,9 +359,7 @@ public class SwingBoard extends JPanel implements MouseListener {
                 computerTurn();
             }
         }
-
-
-    }///need to stop
+    }
 
     public void mouseEntered(MouseEvent e) {
     }

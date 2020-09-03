@@ -194,6 +194,7 @@ public class GameState {
     public void addComputerShips(ComputerShip ship) {
         if (checkComputerShipClashes(ship) || (checkUserShipClashes(ship))) {
             shipClash = true;
+            log.info("Ship clashed; selecting another panel... ");
             return;
         }
         log.info("Computer Ship at x: " + ship.getX() + "and computer ship Y: " + ship.getY() + " added");

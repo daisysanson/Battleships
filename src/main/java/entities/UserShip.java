@@ -1,12 +1,11 @@
 package entities;
 
-import sun.dc.pr.PRError;
+        import sun.dc.pr.PRError;
 
-import javax.swing.*;
+        import javax.swing.*;
 
 public class UserShip extends Ship {
     private int size;
-    private int direction;
 
 
     public UserShip(int x, int y, int size){}
@@ -24,11 +23,4 @@ public class UserShip extends Ship {
         this.size = size;
     }
 
-    public int getDirection() {
-        return direction;
-    }
-
-    public void setDirection(int direction) {
-        this.direction = direction;
-    }
 }
