@@ -7,8 +7,10 @@ package entities;
 public class UserShip extends Ship {
     private int size;
 
-
-    public UserShip(int x, int y, int size){}
+    public UserShip(int x, int y, int size) {
+        super(x, y);
+        this.size = size;
+    }
 
     public UserShip(int x, int y) {
         super(x, y);

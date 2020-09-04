@@ -37,6 +37,7 @@ public class Ship {
     public boolean isHit() {
         return true;
     }
+
 }
 //
 //    public int getShipCounter() {

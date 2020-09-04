@@ -1,4 +1,5 @@
 package service;
+
 import common.Outcomes;
 
 import entities.ComputerShip;
@@ -115,8 +116,8 @@ public class GameState {
             }
 
         }
-        for (UserShip ship : userShips ){
-            if((guess.getX() == ship.getX() && (guess.getY() == ship.getY()))){
+        for (UserShip ship : userShips) {
+            if ((guess.getX() == ship.getX() && (guess.getY() == ship.getY()))) {
                 return false;
             }
 
@@ -135,9 +136,8 @@ public class GameState {
         if (checkUserShipHit(guess)) {
             userShipHit = true;
         }
-            computerGuesses.add(guess);
-        }
-
+        computerGuesses.add(guess);
+    }
 
 
     public boolean checkUserShipHit(Guess guess) {
@@ -243,6 +243,32 @@ public class GameState {
     }
 
 
+    public int createShipSize(int panel, ArrayList intValueOfPanel) {
+        //values already in the list
+        int size = 1;
+        int number = 0;
+        for (int i = 0; i < intValueOfPanel.size(); i++) {
+            number = (int) intValueOfPanel.get(i);//panels selected
+            int result = panel - number;
+            if (result % 10 == 0) {
+                if ((result > 30) || (result < -30)) {
+                    size--;
+                }
+//            if ((result >= 3) || result <= -3) {
+//                size--;
+            }if (result == 0) {
+                continue;
+            }
+            if (size >= 4) {
+                size--;
+                return size;
+            } else
+                size++;
+
+            }
+            return size;
+    }
+
     public boolean isValidGuess() {
         return validGuess;
     }
@@ -256,7 +282,7 @@ public class GameState {
     }
 
     public boolean checkGameOver() {
-        return (getUserShips().size() == 0)  || userGuesses.size() == 5 || getComputerShips().size() == 0;
+        return (getUserShips().size() == 0) || userGuesses.size() == 5 || getComputerShips().size() == 0;
     }
 
 
