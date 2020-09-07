@@ -39,15 +39,15 @@ public class ComputerShip extends Ship {
     }
 
 
-//    public ArrayList<Integer> debugComputerHits() { //check computer selects
-//        int size = 3;
-//        ArrayList<Integer> list = new ArrayList<Integer>(size);
-//        for (int i = 1; i <= size; i++) {
-//            list.add(i);
-//
-//        }
-//        return list;
-//    }
+    public ArrayList<Integer> debugComputerHits() { //check computer selects
+        int size = 3;
+        ArrayList<Integer> list = new ArrayList<Integer>(size);
+        for (int i = 1; i <= size; i++) {
+            list.add(i);
+
+        }
+        return list;
+    }
 
 
 }

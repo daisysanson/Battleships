@@ -5,7 +5,9 @@ public enum Outcomes {
     INVALID(1),
     MISS(2),
     GAME_OVER(3),
-    USERHIT(4);
+    USERHIT(4),
+    PARTIAL_HIT(5);
+
 
     private int code;
 

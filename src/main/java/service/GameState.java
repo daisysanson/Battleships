@@ -18,8 +18,8 @@ public class GameState {
     private Guess guess;
 //    private Guess debugGuess;
 
-    private boolean playerWinner = false;
     private boolean isGameOver = false;
+    private boolean partialHit = false;
     private boolean validGuess = true;
     private boolean computerShipHit = false;
     private boolean userShipHit = false;
@@ -30,6 +30,7 @@ public class GameState {
     private ArrayList<Guess> computerGuesses = new ArrayList<Guess>();
     private ArrayList<ComputerShip> computerShips = new ArrayList<ComputerShip>();
     private ArrayList<UserShip> userShips = new ArrayList<>();
+    private ArrayList valueOfPanel;
 
     public GameState() {
     }
@@ -47,6 +48,9 @@ public class GameState {
         if (!isValidGuess()) {
             return Outcomes.INVALID;
 
+        }
+        if (isPartialHit()) {
+            return Outcomes.PARTIAL_HIT;
         }
         if (isGameOver) {
             return Outcomes.GAME_OVER;
@@ -129,6 +133,7 @@ public class GameState {
 
     public void addComputerGuess(Guess guess) {
         computerShipHit = false;
+        partialHit = false;
         userShipHit = false;
         if (!checkComputerValidGuess(guess)) {
             validGuess = false;
@@ -153,6 +158,12 @@ public class GameState {
         if (matchingShip.size() >= 1) {
             for (UserShip ship1 : matchingShip) {
                 if ((guess.getX() == ship1.getX() && guess.getY() == ship1.getY())) {
+                    if(ship1.getSize() >=2){
+                        hitShip(ship1);
+                        partialHit = true;
+                        return false;
+                    }
+                } else {
                     userShipSunk(ship1);
                 }
             }
@@ -244,29 +255,47 @@ public class GameState {
 
 
     public int createShipSize(int panel, ArrayList intValueOfPanel) {
+       this.valueOfPanel = intValueOfPanel;
         //values already in the list
         int size = 1;
         int number = 0;
-        for (int i = 0; i < intValueOfPanel.size(); i++) {
-            number = (int) intValueOfPanel.get(i);//panels selected
+        for (int i = 0; i < valueOfPanel.size(); i++) {
+            number = (int) valueOfPanel.get(i);//panels selected
             int result = panel - number;
-            if (result % 10 == 0) {
-                if ((result > 30) || (result < -30)) {
-                    size--;
-                }
-//            if ((result >= 3) || result <= -3) {
-//                size--;
-            }if (result == 0) {
+            if (result == 0) {
+                continue;
+            } if((result == 1)|| (result == -1)) {
+                size++;
                 continue;
             }
-            if (size >= 4) {
-                size--;
-                return size;
-            } else
-                size++;
-
+            if (result % 10 == 0) { // if its a multple of 10
+                if ((result >= 20) || (result <= -20)) { //if bigger than 2 rows difference than go back through panel selection
+                    continue;
+                }
+                 size++;
             }
+        }
             return size;
+    }
+
+//    public boolean checkProximity(int panel) {
+//        for (int i = 0; i < valueOfPanel.size(); i++) {
+//            int number = i;
+//            int result = panel - number;
+//            if ((result == -10)
+//                    || (result == 1)
+//                    || (result == 10)
+//                    || (result == -10)) ;
+//        }
+//    }
+
+
+    public boolean hitShip(UserShip ship){
+        if(ship.getSize() == 2){
+            ship.setSize(1);
+            return true;
+        }
+        return false;
     }
 
     public boolean isValidGuess() {
@@ -293,6 +322,13 @@ public class GameState {
         return "YOU LOSE!";
     }
 
+    public boolean isPartialHit() {
+        return partialHit;
+    }
+
+    public void setPartialHit(boolean partialHit) {
+        this.partialHit = partialHit;
+    }
 
     public GameState resetGame() {
         GameState state = new GameState();
