@@ -41,6 +41,10 @@ public class PlayerSelection {
         return new UserShip(x,y, size);
     }
 
+
+
+
+
 //  public ArrayList<Integer> initList(){
 //        ArrayList<Integer> list = computerShip2.debugComputerHits();
 //        return list;
