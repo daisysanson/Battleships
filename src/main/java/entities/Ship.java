@@ -38,6 +38,8 @@ public class Ship {
         return true;
     }
 
+
+
 }
 //
 //    public int getShipCounter() {

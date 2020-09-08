@@ -178,8 +178,6 @@ public class SwingBoard extends JPanel implements MouseListener {
     }
 
 
-
-
     private int setComputerPanel(int computerPanel) {
         return this.computerPanel = computerPanel;
     }
@@ -210,11 +208,11 @@ public class SwingBoard extends JPanel implements MouseListener {
     private void computerTurn() {
         ArrayList<Integer> computerIntValuePanel = new ArrayList();
 
-            //DEBUG FOR GETTING WINNER
-            JOptionPane.showMessageDialog(frame,
-                    "Computer will now guess",
-                    "Aiming...",
-                    JOptionPane.PLAIN_MESSAGE);
+        //DEBUG FOR GETTING WINNER
+        JOptionPane.showMessageDialog(frame,
+                "Computer will now guess",
+                "Aiming...",
+                JOptionPane.PLAIN_MESSAGE);
 
 
         Random rand = new Random();
@@ -222,7 +220,7 @@ public class SwingBoard extends JPanel implements MouseListener {
         Guess computerGuess = state.getDebugComputerGuesses().get(index);
         log.info("comp guess x: " + computerGuess.getX() + "comp guess y: " + computerGuess.getY());
 
-        for(Panel panel : listOfPanels) {
+        for (Panel panel : listOfPanels) {
             if (panel.getX() == computerGuess.getX() && panel.getY() == computerGuess.getY()) {
                 computerPanelClicked = listOfPanels.indexOf(panel);
                 log.info("panel is: " + computerPanelClicked);
@@ -244,7 +242,7 @@ public class SwingBoard extends JPanel implements MouseListener {
             }
         }
 
-        }
+    }
 
 
     public void setComputerPanelClicked(int computerPanelClicked) {
@@ -256,8 +254,15 @@ public class SwingBoard extends JPanel implements MouseListener {
 
         if (outcome.equals(Outcomes.USERHIT)) {
             computerPanel1.setBackground(Color.BLACK);
-            log.info("User ship Hit");
-            return;
+            state.checkProximity(computerPanel);
+            Component pairPanel = mainPanel.getComponent(state.getPair());
+            if (state.getPair() == 0) {
+                return;
+            } if (pairPanel.getBackground() == Color.pink){
+                pairPanel.setBackground(Color.BLACK);
+                log.info("User ship Hit");
+                return;
+            }
         }
         if (outcome.equals(Outcomes.MISS)) {
             computerPanel1.setBackground(Color.BLUE);
@@ -269,8 +274,13 @@ public class SwingBoard extends JPanel implements MouseListener {
             log.info("Your ship's side has been hit");
             state.checkProximity(computerPanel);
             Component pairPanel = mainPanel.getComponent(state.getPair());
-            pairPanel.setBackground(Color.PINK);
+            for (UserShip ship : state.getUserShips()){
+                if (pairPanel.getX() == ship.getX() && pairPanel.getY() == ship.getY()){
+                    ship.setSize(1);
+                }
+            }
 
+            pairPanel.setBackground(Color.PINK);
             return;
         }
     }

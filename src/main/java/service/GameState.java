@@ -189,16 +189,20 @@ public class GameState {
             }
             if ((result == 1) || (result == -1)) {
                 this.setPair(number);
+                return;
             }
             if (result % 10 == 0) { // if its a multple of 10
                 if ((result >= 20) || (result <= -20)) { //if bigger than 2 rows difference than go back through panel selection
                     continue;
                 } else {
                     this.setPair(number);
+                    return;
                 }
             }
-        };
+            this.setPair(0); };
     }
+
+
 
 
     public int getPair() {
