@@ -8,7 +8,10 @@ import entities.Ship;
 import entities.UserShip;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Logger;
 
 public class GameState {
@@ -32,7 +35,8 @@ public class GameState {
     private ArrayList<ComputerShip> computerShips = new ArrayList<ComputerShip>();
     private ArrayList<UserShip> userShips = new ArrayList<>();
     private ArrayList<Guess> debugComputerGuesses = new ArrayList<Guess>();
-    private ArrayList valueOfPanel;
+    private ArrayList<Integer> bigShips = new ArrayList<Integer>();
+    private ArrayList<Integer> intValueOfPanel;
 
     public GameState() {
     }
@@ -88,6 +92,7 @@ public class GameState {
 
     }
 
+
     public ArrayList<Guess> getUserGuesses() {
         return userGuesses;
     }
@@ -139,6 +144,7 @@ public class GameState {
         computerShipHit = false;
         partialHit = false;
         userShipHit = false;
+
         if (!checkComputerValidGuess(guess)) {
             validGuess = false;
         }
@@ -179,10 +185,25 @@ public class GameState {
 
     }
 
+
+
+//    public void checkSequence(ArrayList<Integer> intsValueOfPanel) {
+//        Collections.sort(intsValueOfPanel);
+//        for (int i = 0; i < intsValueOfPanel.size() - 1; i++) {
+//            if (intsValueOfPanel.get(i) + 1 == intsValueOfPanel.get(i + 1)) {
+//                bigShips.add(i);
+//                System.out.print(i);
+//            }
+//
+//        }
+//
+//    }
+
+
     public void checkProximity(int panel) {
         int number = 0;
-        for (int i = 0; i < valueOfPanel.size(); i++) {
-            number = (int) valueOfPanel.get(i);//panels selected
+        for (int i = 0; i < intValueOfPanel.size(); i++) {
+            number = (int) intValueOfPanel.get(i);//panels selected
             int result = panel - number;
             if (result == 0) {
                 continue;
@@ -199,9 +220,10 @@ public class GameState {
                     return;
                 }
             }
-            this.setPair(0); };
+            this.setPair(0);
+        }
+        ;
     }
-
 
 
 
@@ -291,13 +313,15 @@ public class GameState {
     }
 
 
+
     public int createShipSize(int panel, ArrayList intValueOfPanel) {
-        this.valueOfPanel = intValueOfPanel;
+        this.intValueOfPanel = intValueOfPanel;
+
         //values already in the list
         int size = 1;
         int number = 0;
-        for (int i = 0; i < valueOfPanel.size(); i++) {
-            number = (int) valueOfPanel.get(i);//panels selected
+        for (int i = 0; i < intValueOfPanel.size(); i++) {
+            number = (int) intValueOfPanel.get(i);//panels selected
             int result = panel - number;
             if (result == 0) {
                 continue;
@@ -317,16 +341,9 @@ public class GameState {
         return size;
     }
 
-//    public boolean checkProximity(int panel) {
-//        for (int i = 0; i < valueOfPanel.size(); i++) {
-//            int number = i;
-//            int result = panel - number;
-//            if ((result == -10)
-//                    || (result == 1)
-//                    || (result == 10)
-//                    || (result == -10)) ;
-//        }
-//    }
+
+
+
 
 
     public boolean hitShip(UserShip ship) {
