@@ -1,10 +1,5 @@
 package entities;
 
-        import sun.dc.pr.PRError;
-
-        import javax.swing.*;
-        import java.lang.reflect.Array;
-
 public class UserShip extends Ship {
     private int size;
     private int[] shipPairs;

@@ -8,10 +8,7 @@ import entities.Ship;
 import entities.UserShip;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Iterator;
-import java.util.List;
 import java.util.logging.Logger;
 
 public class GameState {
@@ -27,15 +24,14 @@ public class GameState {
     private boolean computerShipHit = false;
     private boolean userShipHit = false;
     private boolean shipClash = false;
-    private int noOfComputerShips = 1;
-    private int noOfPlayerShips = 1;
+    private int noOfComputerShips = 6;
+    private int noOfPlayerShips = 6;
     private int pair;
     private ArrayList<Guess> userGuesses = new ArrayList<Guess>();
     private ArrayList<Guess> computerGuesses = new ArrayList<Guess>();
     private ArrayList<ComputerShip> computerShips = new ArrayList<ComputerShip>();
     private ArrayList<UserShip> userShips = new ArrayList<>();
     private ArrayList<Guess> debugComputerGuesses = new ArrayList<Guess>();
-    private ArrayList<Integer> bigShips = new ArrayList<Integer>();
     private ArrayList<Integer> intValueOfPanel;
 
     public GameState() {
@@ -171,33 +167,19 @@ public class GameState {
                     if (ship1.getSize() >= 2) {
                         hitShip(ship1);
                         partialHit = true;
+                        noOfPlayerShips--;
                         return false;
                     }
-                } else {
                     userShipSunk(ship1);
                 }
             }
-            return true;
 
+            return true;
         }
 
         return false;
 
     }
-
-
-
-//    public void checkSequence(ArrayList<Integer> intsValueOfPanel) {
-//        Collections.sort(intsValueOfPanel);
-//        for (int i = 0; i < intsValueOfPanel.size() - 1; i++) {
-//            if (intsValueOfPanel.get(i) + 1 == intsValueOfPanel.get(i + 1)) {
-//                bigShips.add(i);
-//                System.out.print(i);
-//            }
-//
-//        }
-//
-//    }
 
 
     public void checkProximity(int panel) {
@@ -212,7 +194,7 @@ public class GameState {
                 this.setPair(number);
                 return;
             }
-            if (result % 10 == 0) { // if its a multple of 10
+            if (result % 10 == 0) { // if its a multiple of 10
                 if ((result >= 20) || (result <= -20)) { //if bigger than 2 rows difference than go back through panel selection
                     continue;
                 } else {
@@ -224,7 +206,6 @@ public class GameState {
         }
         ;
     }
-
 
 
     public int getPair() {
@@ -313,15 +294,14 @@ public class GameState {
     }
 
 
-
     public int createShipSize(int panel, ArrayList intValueOfPanel) {
         this.intValueOfPanel = intValueOfPanel;
 
-        //values already in the list
+        //checking if values already in the list
         int size = 1;
         int number = 0;
         for (int i = 0; i < intValueOfPanel.size(); i++) {
-            number = (int) intValueOfPanel.get(i);//panels selected
+            number = (int) intValueOfPanel.get(i);
             int result = panel - number;
             if (result == 0) {
                 continue;
@@ -331,7 +311,7 @@ public class GameState {
                 continue;
             }
             if (result % 10 == 0) {
-                if ((result >= 20) || (result <= -20)) { //if bigger than 2 rows difference than go back through panel selection
+                if ((result >= 20) || (result <= -20)) { //if bigger than 2 rows difference in size than go back through panel selection
                     continue;
                 }
 
@@ -340,10 +320,6 @@ public class GameState {
         }
         return size;
     }
-
-
-
-
 
 
     public boolean hitShip(UserShip ship) {
@@ -367,7 +343,7 @@ public class GameState {
     }
 
     public boolean checkGameOver() {
-        return (getUserShips().size() == 0) || userGuesses.size() == 20 || getComputerShips().size() == 0;
+        return (getUserShips().size() == 0) || userGuesses.size() == 6 || getComputerShips().size() == 0;
     }
 
 
@@ -403,13 +379,17 @@ public class GameState {
         }
     }
 
-    public ArrayList<Guess> getDebugComputerGuesses() {
-        return debugComputerGuesses;
-    }
 
-    public void setDebugComputerGuesses(ArrayList<Guess> debugComputerGuesses) {
-        this.debugComputerGuesses = debugComputerGuesses;
-    }
+//    ////DEBUG COMPUTER WINNER
+//    public ArrayList<Guess> getDebugComputerGuesses() {
+//        return debugComputerGuesses;
+//    }
+//
+//    public void setDebugComputerGuesses(ArrayList<Guess> debugComputerGuesses) {
+//        this.debugComputerGuesses = debugComputerGuesses;
+//    }
+
+
 }
 
 
