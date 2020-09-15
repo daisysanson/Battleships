@@ -433,11 +433,11 @@ public class SwingBoard extends JPanel implements MouseListener {
                                 }
                             }
                         }
-                        mouseClicked(e);
-
-                        shipCreator++;
-                        return;
                     }
+                    mouseClicked(e);
+
+                    shipCreator++;
+                    return;
 
                 }
 
