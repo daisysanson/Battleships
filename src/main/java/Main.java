@@ -9,8 +9,6 @@ public class Main {
 
 
     public static void main(String[] args) {
-//        ComputerShip computerShip = new ComputerShip();
-//        computerShip.randomNumberGenerator();
 
         final PlayerSelection playerSelection = new PlayerSelection();
         final GameState gameState = new GameState();

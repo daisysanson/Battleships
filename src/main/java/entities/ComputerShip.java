@@ -28,7 +28,7 @@ public class ComputerShip extends Ship {
 
 
     public int randomComputerPanelGenerator(ArrayList list) {
-        if (list.size() == 0 ){
+        if (list.size() == 0) {
             listOfComputerPanels();
         }
         Random rand = new Random();
@@ -40,7 +40,7 @@ public class ComputerShip extends Ship {
 
 
     public ArrayList<Integer> debugComputerHits() { //check computer selects
-        int size = 6;
+        int size = 100;
         ArrayList<Integer> list = new ArrayList<Integer>(size);
         for (int i = 1; i <= size; i++) {
             list.add(i);

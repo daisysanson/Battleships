@@ -26,7 +26,7 @@ public class GameState {
     private boolean userShipHit = false;
     private boolean shipClash = false;
     private int noOfComputerShips = 6;
-    private int noOfPlayerShips = 6;
+    private int guesses = 8;
     private int pair;
     private ArrayList<Guess> userGuesses = new ArrayList<Guess>();
     private ArrayList<Guess> computerGuesses = new ArrayList<Guess>();
@@ -63,6 +63,13 @@ public class GameState {
         }
     }
 
+    public int getGuesses() {
+        return guesses;
+    }
+
+    public void setGuesses(int guesses) {
+        this.guesses = guesses;
+    }
 
     public Guess getGuess() {
         return guess;
@@ -85,6 +92,7 @@ public class GameState {
         if (checkUserValidGuess(guess)) {
             validGuess = true;
             userGuesses.add(guess);
+            guesses--;
         }
 
     }
@@ -165,18 +173,16 @@ public class GameState {
         if (matchingShip.size() >= 1) {
             for (UserShip ship1 : matchingShip) {
                 if ((guess.getX() == ship1.getX() && guess.getY() == ship1.getY())) {
+                    userShipSunk(ship1);
                     if (ship1.getSize() >= 2) {
                         hitShip(ship1);
                         partialHit = true;
-                        noOfPlayerShips--;
                         return false;
                     }
-                    userShipSunk(ship1);
 
 
                 }
             }
-
             return true;
         }
 
@@ -346,7 +352,7 @@ public class GameState {
     }
 
     public boolean checkGameOver() {
-        return (getUserShips().size() == 0) || userGuesses.size() == 6 || getComputerShips().size() == 0;
+        return (getUserShips().size() == 0) || userGuesses.size() == 8 || getComputerShips().size() == 0;
     }
 
 
@@ -378,7 +384,7 @@ public class GameState {
     }
 
 
-
+////COMPUTER WINNER////
 
 //
 //    public void setComputerGuessesToUser() {
@@ -387,8 +393,8 @@ public class GameState {
 //            debugComputerGuesses.add(guess);
 //        }
 //    }
-
-
+//
+//
 //    public ArrayList<Guess> getDebugComputerGuesses() {
 //        return debugComputerGuesses;
 //    }

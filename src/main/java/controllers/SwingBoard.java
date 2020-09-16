@@ -7,7 +7,6 @@ import entities.UserShip;
 import service.GameState;
 import entities.Guess;
 
-import javax.jws.soap.SOAPBinding.Use;
 import javax.swing.JPanel;
 import javax.swing.JFrame;
 import java.awt.Component;
@@ -28,7 +27,6 @@ import java.util.logging.Logger;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import java.util.Random;
 
 public class SwingBoard extends JPanel implements MouseListener {
     private static final int PANEL_LENGTH = 10;
@@ -161,7 +159,7 @@ public class SwingBoard extends JPanel implements MouseListener {
     private void playerReselectShips() {
         JOptionPane.showMessageDialog(frame,
                 "You can't have ships bigger than 2 squares; please reselect!",
-                "Doh!",
+                "Nope!",
                 JOptionPane.WARNING_MESSAGE);
     }
 
@@ -207,7 +205,6 @@ public class SwingBoard extends JPanel implements MouseListener {
 
 
     private void computerTurn() {
-        ArrayList<Integer> computerIntValuePanel = new ArrayList();
         JOptionPane.showMessageDialog(frame,
                 "Computer will now guess",
                 "Aiming...",
@@ -216,13 +213,13 @@ public class SwingBoard extends JPanel implements MouseListener {
         state.setGuess(computerGuess);
 
 
-            Outcomes outcome = state.getOutcome(computerGuess);
-            displayEvent(state.getOutcome(computerGuess));
-        if(setUpMode) {
+        Outcomes outcome = state.getOutcome(computerGuess);
+        displayEvent(state.getOutcome(computerGuess));
+        if (setUpMode) {
             computerTurn = false;
             computerClickOutcome(outcome, computerPanel);
             checkTurn();
-        } else{
+        } else {
             return;
         }
     }
@@ -244,9 +241,9 @@ public class SwingBoard extends JPanel implements MouseListener {
             if (state.getPair() == 0) {
                 return;
             }
-            if (pairPanel.getBackground() == Color.pink) {
+            if (pairPanel.getBackground() == Color.pink) { // if there's a panel in proximity to computerPanel, and it has alrady been git, the 'whole' ship appears black as sunk!
                 pairPanel.setBackground(Color.BLACK);
-                log.info("User ship hit");
+                log.info("User ship sunk");
                 return;
             }
         }
@@ -287,7 +284,7 @@ public class SwingBoard extends JPanel implements MouseListener {
                 break;
             case USERHIT:
                 JOptionPane.showMessageDialog(frame,
-                        "You're ship has been hit",
+                        "You're ship has sunk",
                         "HIT!",
                         JOptionPane.PLAIN_MESSAGE);
                 userShips--;
@@ -379,9 +376,7 @@ public class SwingBoard extends JPanel implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-
-
-        if (setUpMode) { //if it is false
+        if (setUpMode) { //if set up mode has ended
             log.info("mouse clicked method called");
             Panel panel = (Panel) e.getSource();
             Guess currentGuess = state.getGuess();
@@ -446,9 +441,9 @@ public class SwingBoard extends JPanel implements MouseListener {
             repaint();
             mouseClicked(e);
             mouseReleased(e);
-        } else {
+        } else { //setup 
             JPanel panel2 = (JPanel) e.getSource();
-            if (userShips < MAX_USER_SHIPS) { // mAX SHJIs
+            if (userShips < MAX_USER_SHIPS) {
                 while (shipCreator < 6) {
                     for (Panel panel : listOfPanels) {
                         if (panel2.getX() == panel.getX() && panel2.getY() == panel.getY()) {
@@ -484,7 +479,7 @@ public class SwingBoard extends JPanel implements MouseListener {
                         initShip(panelX, panelY, size);
                     }
                 }
-            } else { //multiple ships with same 'size' but are sepearte ships, user sees it as 3 ships.
+            } else { //multiple ships with same 'size' but are separate ships, user sees it as one ship.
                 initAI();
                 setUpMode = true;
                 playerPrompt();
@@ -494,9 +489,9 @@ public class SwingBoard extends JPanel implements MouseListener {
     }
 
     public void displayNoOfShipsRemaining() {
-        ;
+        int guessesRemaining = state.getGuesses();
         int computerShipsRemaining = state.getComputerShips().size();
-        tfield.setText("You have " + userShips + " ships remaining." + " The computer has " + computerShipsRemaining + " remaining.");
+        tfield.setText("You have " + guessesRemaining + " guesses remaining." + " The computer has " + computerShipsRemaining + " remaining.");
 
     }
 
@@ -531,7 +526,7 @@ public class SwingBoard extends JPanel implements MouseListener {
 
 
     public void mouseReleased(MouseEvent e) {
-        if (setUpMode) {
+        if (setUpMode) { //checks turn taking
             if (computerTurn == true && userTurn == false) {
                 computerTurn();
             }
@@ -547,56 +542,58 @@ public class SwingBoard extends JPanel implements MouseListener {
     public void mouseExited(MouseEvent e) {
 
     }
+
 }
 
-
 ////////////////////// COMPUTER WINNER/////////////////
+/* Add initComputerGuess() to initAI method
+disable out the other computerTurn and computerGuess method
+enable methods at bottom of gameState
+enable initList 2 in PlayerSelection
 
 
-//    private void initComputerGuess(ArrayList list) {
-//        state.setComputerGuessesToUser();
-//    }
+  private void initComputerGuess() {
+      state.setComputerGuessesToUser();
+    }
 
 
-//    private void computerTurn() { // COMPUTER WINNER
-//        ArrayList<Integer> computerIntValuePanel = new ArrayList();
-//
-//
-//
-//        JOptionPane.showMessageDialog(frame,
-//                "Computer will now guess",
-//                "Aiming...",
-//                JOptionPane.PLAIN_MESSAGE);
-//
-//
-//        Random rand = new Random();
-//        int index = rand.nextInt(state.getDebugComputerGuesses().size());
-//        Guess computerGuess = state.getDebugComputerGuesses().get(index);
-//        log.info("comp guess x: " + computerGuess.getX() + "comp guess y: " + computerGuess.getY());
-//
-//        for (Panel panel : listOfPanels) {
-//            if (panel.getX() == computerGuess.getX() && panel.getY() == computerGuess.getY()) {
-//                computerPanelClicked = listOfPanels.indexOf(panel);
-//                log.info("panel is: " + computerPanelClicked);
-//                computerIntValuePanel.add(computerPanelClicked);
-//
-////            }
-////            for (int i = 0; i < computerIntValuePanel.size(); i++) {
-////                int panelFind = computerIntValuePanel.get(i);//search through list to determine ship sizes 6
-////                int panelX = mainPanel.getComponent(panelFind).getX();
-////                int panelY = mainPanel.getComponent(panelFind).getY();
-//
-//                state.addComputerGuess(computerGuess);
-//                state.getDebugComputerGuesses().remove(computerGuess);
-//                Outcomes outcome = state.getOutcome(computerGuess);
-//                displayEvent(state.getOutcome(computerGuess));
-//                computerTurn = false;
-//                computerClickOutcome(outcome, computerPanelClicked);
-//                checkTurn();
+
+    private void computerTurn() { // COMPUTER WINNER
+        ArrayList<Integer> computerIntValuePanel = new ArrayList();
+
+        JOptionPane.showMessageDialog(frame,
+                "Computer will now guess",
+                "Aiming...",
+                JOptionPane.PLAIN_MESSAGE);
+
+
+        Random rand = new Random();
+        int index = rand.nextInt(state.getDebugComputerGuesses().size());
+        Guess computerGuess = state.getDebugComputerGuesses().get(index);
+        log.info("comp guess x: " + computerGuess.getX() + "comp guess y: " + computerGuess.getY());
+
+        for (Panel panel : listOfPanels) {
+            if (panel.getX() == computerGuess.getX() && panel.getY() == computerGuess.getY()) {
+                computerPanelClicked = listOfPanels.indexOf(panel);
+                log.info("panel is: " + computerPanelClicked);
+                computerIntValuePanel.add(computerPanelClicked);
+
 //            }
-//        }
-//    }
-//}
+//            for (int i = 0; i < computerIntValuePanel.size(); i++) {
+//                int panelFind = computerIntValuePanel.get(i);//search through list to determine ship sizes 6
+//                int panelX = mainPanel.getComponent(panelFind).getX();
+//                int panelY = mainPanel.getComponent(panelFind).getY();
 
+                state.addComputerGuess(computerGuess);
+                state.getDebugComputerGuesses().remove(computerGuess);
+                Outcomes outcome = state.getOutcome(computerGuess);
+                displayEvent(state.getOutcome(computerGuess));
+                computerTurn = false;
+                computerClickOutcome(outcome, computerPanelClicked);
+                checkTurn();
+            }
+        }
+    }
+}
+*/
 
-//}

@@ -25,26 +25,24 @@ public class PlayerSelection {
     }
 
 
-    public ArrayList<Integer> initList(){
+    public ArrayList<Integer> initList() {
         ArrayList<Integer> list = computerShip2.listOfComputerPanels();
         return list;
 
     }
 
-        public int generateComputerPanel(ArrayList list) {
+    public int generateComputerPanel(ArrayList list) {
         int randomPanel = computerShip2.randomComputerPanelGenerator(list);
         return randomPanel;
     }
 
 
     public UserShip createUserShip(int x, int y, int size) {
-        return new UserShip(x,y, size);
+        return new UserShip(x, y, size);
     }
 
 
-
-
-
+//
 //  public ArrayList<Integer> initList(){
 //        ArrayList<Integer> list = computerShip2.debugComputerHits();
 //        return list;
