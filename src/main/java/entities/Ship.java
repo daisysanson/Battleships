@@ -4,7 +4,6 @@ package entities;
 public class Ship {
     private int x;
     private int y;
-    private boolean isHit;
 
 
     public Ship(int x, int y) {
@@ -34,18 +33,11 @@ public class Ship {
     }
 
 
-    public boolean isHit() {
-        return true;
-    }
+
+
+
 }
-//
-//    public int getShipCounter() {
-//        return shipCounter;
-//    }
-//
-//    public void setShipCounter(int shipCounter) {
-//        this.shipCounter = shipCounter;
-//    }
+
 
 
 

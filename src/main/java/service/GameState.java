@@ -1,6 +1,8 @@
 package service;
+
 import common.Outcomes;
 
+import common.Winner;
 import entities.ComputerShip;
 import entities.Guess;
 import entities.Ship;
@@ -17,18 +19,21 @@ public class GameState {
     private Guess guess;
 //    private Guess debugGuess;
 
-    private boolean playerWinner = false;
     private boolean isGameOver = false;
+    private boolean partialHit = false;
     private boolean validGuess = true;
     private boolean computerShipHit = false;
     private boolean userShipHit = false;
     private boolean shipClash = false;
-    private int noOfComputerShips = 1;
-    private int noOfPlayerShips = 1;
+    private int noOfComputerShips = 6;
+    private int noOfPlayerShips = 6;
+    private int pair;
     private ArrayList<Guess> userGuesses = new ArrayList<Guess>();
     private ArrayList<Guess> computerGuesses = new ArrayList<Guess>();
     private ArrayList<ComputerShip> computerShips = new ArrayList<ComputerShip>();
     private ArrayList<UserShip> userShips = new ArrayList<>();
+    private ArrayList<Guess> debugComputerGuesses = new ArrayList<Guess>();
+    private ArrayList<Integer> intValueOfPanel;
 
     public GameState() {
     }
@@ -46,6 +51,9 @@ public class GameState {
         if (!isValidGuess()) {
             return Outcomes.INVALID;
 
+        }
+        if (isPartialHit()) {
+            return Outcomes.PARTIAL_HIT;
         }
         if (isGameOver) {
             return Outcomes.GAME_OVER;
@@ -65,6 +73,8 @@ public class GameState {
     }
 
     public void addUserGuess(Guess guess) {
+        userShipHit = false;
+        partialHit = false;
         computerShipHit = false;
         if (!checkUserValidGuess(guess)) {
             validGuess = false;
@@ -78,6 +88,7 @@ public class GameState {
         }
 
     }
+
 
     public ArrayList<Guess> getUserGuesses() {
         return userGuesses;
@@ -115,8 +126,8 @@ public class GameState {
             }
 
         }
-        for (UserShip ship : userShips ){
-            if((guess.getX() == ship.getX() && (guess.getY() == ship.getY()))){
+        for (UserShip ship : userShips) {
+            if ((guess.getX() == ship.getX() && (guess.getY() == ship.getY()))) {
                 return false;
             }
 
@@ -128,16 +139,17 @@ public class GameState {
 
     public void addComputerGuess(Guess guess) {
         computerShipHit = false;
+        partialHit = false;
         userShipHit = false;
+
         if (!checkComputerValidGuess(guess)) {
             validGuess = false;
         }
         if (checkUserShipHit(guess)) {
             userShipHit = true;
         }
-            computerGuesses.add(guess);
-        }
-
+        computerGuesses.add(guess);
+    }
 
 
     public boolean checkUserShipHit(Guess guess) {
@@ -153,17 +165,59 @@ public class GameState {
         if (matchingShip.size() >= 1) {
             for (UserShip ship1 : matchingShip) {
                 if ((guess.getX() == ship1.getX() && guess.getY() == ship1.getY())) {
+                    if (ship1.getSize() >= 2) {
+                        hitShip(ship1);
+                        partialHit = true;
+                        noOfPlayerShips--;
+                        return false;
+                    }
                     userShipSunk(ship1);
+
+
                 }
             }
-            return true;
 
+            return true;
         }
 
         return false;
 
     }
 
+
+    public void checkProximity(int panel) {
+        int number = 0;
+        for (int i = 0; i < intValueOfPanel.size(); i++) {
+            number = (int) intValueOfPanel.get(i);//panels selected
+            int result = panel - number;
+            if (result == 0) {
+                continue;
+            }
+            if ((result == 1) || (result == -1)) {
+                this.setPair(number);
+                return;
+            }
+            if (result % 10 == 0) { // if its a multiple of 10
+                if ((result >= 20) || (result <= -20)) { //if bigger than 2 rows difference than go back through panel selection
+                    continue;
+                } else {
+                    this.setPair(number);
+                    return;
+                }
+            }
+            this.setPair(0);
+        }
+
+    }
+
+
+    public int getPair() {
+        return pair;
+    }
+
+    public void setPair(int pair) {
+        this.pair = pair;
+    }
 
     public boolean checkComputerValidGuess(Guess guess) {
         for (Guess guess1 : computerGuesses) {
@@ -243,6 +297,42 @@ public class GameState {
     }
 
 
+    public int createShipSize(int panel, ArrayList intValueOfPanel) {
+        this.intValueOfPanel = intValueOfPanel;
+
+        //checking if values already in the list
+        int size = 1;
+        int number = 0;
+        for (int i = 0; i < intValueOfPanel.size(); i++) {
+            number = (int) intValueOfPanel.get(i);
+            int result = panel - number;
+            if (result == 0) {
+                continue;
+            }
+            if ((result == 1) || (result == -1)) {
+                size++;
+                continue;
+            }
+            if (result % 10 == 0) {
+                if ((result >= 20) || (result <= -20)) { //if bigger than 2 rows difference in size than go back through panel selection
+                    continue;
+                }
+
+                size++;
+            }
+        }
+        return size;
+    }
+
+
+    public boolean hitShip(UserShip ship) {
+        if (ship.getSize() == 2) {
+            ship.setSize(0);
+            return true;
+        }
+        return false;
+    }
+
     public boolean isValidGuess() {
         return validGuess;
     }
@@ -256,17 +346,26 @@ public class GameState {
     }
 
     public boolean checkGameOver() {
-        return (getUserShips().size() == 0)  || userGuesses.size() == 5 || getComputerShips().size() == 0;
+        return (getUserShips().size() == 0) || userGuesses.size() == 6 || getComputerShips().size() == 0;
     }
 
 
-    public String calculateWinner() {
+    public Winner calculateWinner() {
         if (computerShips.size() == 0) {
-            return "YOU WIN!";
+            return Winner.PLAYER;
+        } if(computerShips.size() > 0 && userShips.size() > 0){
+            return Winner.DRAW;
         }
-        return "YOU LOSE!";
+        return Winner.COMPUTER;
     }
 
+    public boolean isPartialHit() {
+        return partialHit;
+    }
+
+    public void setPartialHit(boolean partialHit) {
+        this.partialHit = partialHit;
+    }
 
     public GameState resetGame() {
         GameState state = new GameState();
@@ -277,6 +376,26 @@ public class GameState {
     public int getNoOfComputerShips() {
         return noOfComputerShips;
     }
+
+
+
+
+//
+//    public void setComputerGuessesToUser() {
+//        for (UserShip ship : userShips) {
+//            Guess guess = new Guess(ship.getX(), ship.getY());
+//            debugComputerGuesses.add(guess);
+//        }
+//    }
+
+
+//    public ArrayList<Guess> getDebugComputerGuesses() {
+//        return debugComputerGuesses;
+//    }
+//
+//    public void setDebugComputerGuesses(ArrayList<Guess> debugComputerGuesses) {
+//        this.debugComputerGuesses = debugComputerGuesses;
+//    }
 
 
 }
