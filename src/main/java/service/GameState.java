@@ -2,6 +2,7 @@ package service;
 
 import common.Outcomes;
 
+import common.Winner;
 import entities.ComputerShip;
 import entities.Guess;
 import entities.Ship;
@@ -171,6 +172,8 @@ public class GameState {
                         return false;
                     }
                     userShipSunk(ship1);
+
+
                 }
             }
 
@@ -204,7 +207,7 @@ public class GameState {
             }
             this.setPair(0);
         }
-        ;
+
     }
 
 
@@ -347,11 +350,13 @@ public class GameState {
     }
 
 
-    public String calculateWinner() {
+    public Winner calculateWinner() {
         if (computerShips.size() == 0) {
-            return "YOU WIN!";
+            return Winner.PLAYER;
+        } if(computerShips.size() > 0 && userShips.size() > 0){
+            return Winner.DRAW;
         }
-        return "YOU LOSE!";
+        return Winner.COMPUTER;
     }
 
     public boolean isPartialHit() {
@@ -372,15 +377,18 @@ public class GameState {
         return noOfComputerShips;
     }
 
-    public void setComputerGuessesToUser() {
-        for (UserShip ship : userShips) {
-            Guess guess = new Guess(ship.getX(), ship.getY());
-            debugComputerGuesses.add(guess);
-        }
-    }
 
 
-//    ////DEBUG COMPUTER WINNER
+
+//
+//    public void setComputerGuessesToUser() {
+//        for (UserShip ship : userShips) {
+//            Guess guess = new Guess(ship.getX(), ship.getY());
+//            debugComputerGuesses.add(guess);
+//        }
+//    }
+
+
 //    public ArrayList<Guess> getDebugComputerGuesses() {
 //        return debugComputerGuesses;
 //    }
