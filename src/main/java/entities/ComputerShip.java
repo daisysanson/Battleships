@@ -1,6 +1,7 @@
 package entities;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 
@@ -9,16 +10,16 @@ public class ComputerShip extends Ship {
 
     public ComputerShip(int x, int y) {
         super(x, y);
-        this.rand = rand;
+        this.rand = new Random();
     }
 
     public ComputerShip() {
 
     }
 
-    public ArrayList<Integer> listOfComputerPanels() {
+    public List<Integer> listOfComputerPanels() {
         int size = 100;
-        ArrayList<Integer> list = new ArrayList<Integer>(size);
+        List<Integer> list = new ArrayList<>(size);
         for (int i = 1; i <= size; i++) {
             list.add(i);
 
@@ -27,8 +28,8 @@ public class ComputerShip extends Ship {
     }
 
 
-    public int randomComputerPanelGenerator(ArrayList list) {
-        if (list.size() == 0) {
+    public int randomComputerPanelGenerator(List list) {
+        if (list.isEmpty()) {
             listOfComputerPanels();
         }
         Random rand = new Random();
@@ -39,9 +40,9 @@ public class ComputerShip extends Ship {
     }
 
 
-    public ArrayList<Integer> debugComputerHits() { //check computer selects
+    public List<Integer> debugComputerHits() { //check computer selects
         int size = 100;
-        ArrayList<Integer> list = new ArrayList<Integer>(size);
+        List<Integer> list = new ArrayList<>(size);
         for (int i = 1; i <= size; i++) {
             list.add(i);
 

@@ -1,8 +1,8 @@
 package service;
 
-import common.Outcomes;
+import enumeration.Outcomes;
 
-import common.Winner;
+import enumeration.Winner;
 import entities.ComputerShip;
 import entities.Guess;
 import entities.Ship;
@@ -10,6 +10,7 @@ import entities.UserShip;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Logger;
 
 public class GameState {
@@ -28,12 +29,12 @@ public class GameState {
     private int noOfComputerShips = 6;
     private int guesses = 8;
     private int pair;
-    private ArrayList<Guess> userGuesses = new ArrayList<Guess>();
-    private ArrayList<Guess> computerGuesses = new ArrayList<Guess>();
-    private ArrayList<ComputerShip> computerShips = new ArrayList<ComputerShip>();
-    private ArrayList<UserShip> userShips = new ArrayList<>();
-    private ArrayList<Guess> debugComputerGuesses = new ArrayList<Guess>();
-    private ArrayList<Integer> intValueOfPanel;
+    private List<Guess> userGuesses = new ArrayList<Guess>();
+    private List<Guess> computerGuesses = new ArrayList<Guess>();
+    private List<ComputerShip> computerShips = new ArrayList<ComputerShip>();
+    private List<UserShip> userShips = new ArrayList<>();
+    private List<Guess> debugComputerGuesses = new ArrayList<Guess>();
+    private List<Integer> intValueOfPanel;
 
     public GameState() {
     }
@@ -98,7 +99,7 @@ public class GameState {
     }
 
 
-    public ArrayList<Guess> getUserGuesses() {
+    public List<Guess> getUserGuesses() {
         return userGuesses;
     }
 
@@ -247,7 +248,7 @@ public class GameState {
 
     }
 
-    public ArrayList<Guess> getComputerGuesses() {
+    public List<Guess> getComputerGuesses() {
         return computerGuesses;
     }
 
@@ -262,11 +263,11 @@ public class GameState {
     }
 
 
-    public ArrayList<UserShip> getUserShips() {
+    public List<UserShip> getUserShips() {
         return userShips;
     }
 
-    public ArrayList<ComputerShip> getComputerShips() {
+    public List<ComputerShip> getComputerShips() {
         return computerShips;
     }
 
@@ -303,7 +304,7 @@ public class GameState {
     }
 
 
-    public int createShipSize(int panel, ArrayList intValueOfPanel) {
+    public int createShipSize(int panel, List intValueOfPanel) {
         this.intValueOfPanel = intValueOfPanel;
 
         //checking if values already in the list

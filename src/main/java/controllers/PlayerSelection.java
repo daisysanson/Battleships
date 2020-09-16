@@ -7,7 +7,7 @@ import entities.Guess;
 import entities.Ship;
 import entities.UserShip;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 public class PlayerSelection {
@@ -16,8 +16,8 @@ public class PlayerSelection {
 
 
     public Guess createGuess(int x, int y) {
-        Guess guess = new Guess(x, y);
-        return guess;
+        return new Guess(x, y);
+
     }
 
     public Ship createShip(int x, int y) {
@@ -25,15 +25,14 @@ public class PlayerSelection {
     }
 
 
-    public ArrayList<Integer> initList() {
-        ArrayList<Integer> list = computerShip2.listOfComputerPanels();
-        return list;
+    public List<Integer> initList() {
+       return computerShip2.listOfComputerPanels();
+
 
     }
 
-    public int generateComputerPanel(ArrayList list) {
-        int randomPanel = computerShip2.randomComputerPanelGenerator(list);
-        return randomPanel;
+    public int generateComputerPanel(List list) {
+        return computerShip2.randomComputerPanelGenerator(list);
     }
 
 
@@ -41,16 +40,17 @@ public class PlayerSelection {
         return new UserShip(x, y, size);
     }
 
+}
 
-//
-//  public ArrayList<Integer> initList(){
-//        ArrayList<Integer> list = computerShip2.debugComputerHits();
-//        return list;
-//
-//    }
+ /* 'Computer winner mode'
+  public ArrayList<Integer> initList(){
+        ArrayList<Integer> list = computerShip2.debugComputerHits();
+        return list;
+
+    }
 }
 
 
 
 
-
+*/
