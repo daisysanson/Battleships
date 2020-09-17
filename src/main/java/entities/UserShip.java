@@ -22,11 +22,4 @@ public class UserShip extends Ship {
         this.size = size;
     }
 
-    public int[] getShipPairs() {
-        return shipPairs;
-    }
-
-    public void setShipPairs(int[] shipPairs) {
-        this.shipPairs = shipPairs;
-    }
 }

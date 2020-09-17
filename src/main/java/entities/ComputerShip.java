@@ -28,7 +28,7 @@ public class ComputerShip extends Ship {
     }
 
 
-    public int randomComputerPanelGenerator(List list) {
+    public int randomComputerPanelGenerator(List<Integer> list) {
         if (list.isEmpty()) {
             listOfComputerPanels();
         }
@@ -40,15 +40,15 @@ public class ComputerShip extends Ship {
     }
 
 
-    public List<Integer> debugComputerHits() { //check computer selects
-        int size = 100;
-        List<Integer> list = new ArrayList<>(size);
-        for (int i = 1; i <= size; i++) {
-            list.add(i);
-
-        }
-        return list;
-    }
+//    public List<Integer> debugComputerHits() { //check computer selects
+//        int size = 100;
+//        List<Integer> list = new ArrayList<>(size);
+//        for (int i = 1; i <= size; i++) {
+//            list.add(i);
+//
+//        }
+//        return list;
+//    }
 
 
 }

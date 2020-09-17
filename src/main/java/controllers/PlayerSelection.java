@@ -31,7 +31,7 @@ public class PlayerSelection {
 
     }
 
-    public int generateComputerPanel(List list) {
+    public int generateComputerPanel(List<Integer> list) {
         return computerShip2.randomComputerPanelGenerator(list);
     }
 
@@ -40,17 +40,17 @@ public class PlayerSelection {
         return new UserShip(x, y, size);
     }
 
+
+// // method for 'Computer winner mode'
+//  public List<Integer> initList(){
+//        List<Integer> list = computerShip2.debugComputerHits();
+//        return list;
+//
+//    }
+
 }
 
- /* 'Computer winner mode'
-  public ArrayList<Integer> initList(){
-        ArrayList<Integer> list = computerShip2.debugComputerHits();
-        return list;
-
-    }
-}
 
 
 
 
-*/
