@@ -182,7 +182,7 @@ public class GameState {
             if (!(guess.getX() == ship1.getX() && guess.getY() == ship1.getY())) {
                 return false;
             }
-            if (!(ship1.getSize() >= 2)) {
+            if (!(ship1.getSize() >= 2)) {//if size is 1, no pair and it sinks
                 hitShip(ship1);
                 userShipSunk(ship1);
                 return true;
@@ -375,27 +375,42 @@ public class GameState {
     public int getNoOfComputerShips() {
         return 6;
     }
+
+
+// COMPUTER WINNER////
+
+//
+//    public void setComputerGuessesToUser() {
+//        for (UserShip ship : userShips) {
+//            Guess guess = new Guess(ship.getX(), ship.getY());
+//            debugComputerGuesses.add(guess);
+//        }
+//    }
+//
+//
+//    public List<Guess> getDebugComputerGuesses() {
+//        return debugComputerGuesses;
+//    }
+//
+//    public void setDebugComputerGuesses(ArrayList<Guess> debugComputerGuesses) {
+//        this.debugComputerGuesses = debugComputerGuesses;
+//    }
+//    public void setComputerGuessesToUser() {
+//        for (UserShip ship : userShips) {
+//            Guess guess = new Guess(ship.getX(), ship.getY());
+//            debugComputerGuesses.add(guess);
+//        }
+//    }
+//
+//
+//    public List<Guess> getDebugComputerGuesses() {
+//        return debugComputerGuesses;
+//    }
+//
+//    public void setDebugComputerGuesses(ArrayList<Guess> debugComputerGuesses) {
+//        this.debugComputerGuesses = debugComputerGuesses;
+//    }
 }
 
-/*// COMPUTER WINNER////
 
-
-    public void setComputerGuessesToUser() {
-        for (UserShip ship : userShips) {
-            Guess guess = new Guess(ship.getX(), ship.getY());
-            debugComputerGuesses.add(guess);
-        }
-    }
-
-
-    public List<Guess> getDebugComputerGuesses() {
-        return debugComputerGuesses;
-    }
-
-    public void setDebugComputerGuesses(ArrayList<Guess> debugComputerGuesses) {
-        this.debugComputerGuesses = debugComputerGuesses;
-    }
-}
-
-*/
 

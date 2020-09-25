@@ -5,6 +5,14 @@ import service.GameState;
 
 import javax.swing.SwingUtilities;
 
+
+/**
+ * The 'Battleships' program is a version of the widely known game 'battleships',playable between a player(user) and
+ * the computer.
+ * @author  Daisy Sanson
+ * @version 1.0
+ */
+
 public class Main {
 
 

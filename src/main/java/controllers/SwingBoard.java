@@ -24,6 +24,7 @@ import java.awt.GridLayout;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.util.List;
+import java.util.Random;
 import java.util.logging.Logger;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -67,7 +68,7 @@ public class SwingBoard extends JPanel implements MouseListener {
 
     }
 
-    private void initAI() {
+    public void initAI() {
         while (state.getComputerShips().size() < state.getNoOfComputerShips()) {
             initComputerShips(playerSelection.generateComputerPanel(list));
         }
@@ -169,7 +170,11 @@ public class SwingBoard extends JPanel implements MouseListener {
     }
 
 
-    private void initComputerShips(int randomPanel) {
+    /**
+     * Fetches random number and converts to a SwingComponent(Panel),
+     * from which an x and y value can be attained to create a Ship(x,y) object.
+     */
+    public void initComputerShips(int randomPanel) {
         int randomPanelX = mainPanel.getComponent(randomPanel).getX();
         int randomPanelY = mainPanel.getComponent(randomPanel).getY();
         ComputerShip computerShip = (ComputerShip) playerSelection.createShip(randomPanelX, randomPanelY);
@@ -226,7 +231,7 @@ public class SwingBoard extends JPanel implements MouseListener {
     }
 
 
-    private void computerClickOutcome(Outcomes outcome, int computerPanel) {
+    public void computerClickOutcome(Outcomes outcome, int computerPanel) {
         Component computerPanel1 = mainPanel.getComponent(computerPanel);
 
         if (outcome.equals(Outcomes.USERHIT)) {
@@ -237,7 +242,10 @@ public class SwingBoard extends JPanel implements MouseListener {
             if (state.getPair() == 0) {
                 return;
             }
-            if (pairPanel.getBackground() == Color.pink) { // if there's a panel in proximity to computerPanel, and it has alrady been git, the 'whole' ship appears black as sunk!
+            /**
+             * if there's a panel in proximity to computerPanel, the 'whole' ship appears black as sunk
+             */
+            if (pairPanel.getBackground() == Color.pink) { //
                 pairPanel.setBackground(Color.BLACK);
                 log.info("User ship sunk");
                 return;
@@ -316,7 +324,9 @@ public class SwingBoard extends JPanel implements MouseListener {
 
 
     private void promptPlayAgain() {
-        if (JOptionPane.showConfirmDialog(null, "Do you want to play again?", "Play Again?",
+        if (JOptionPane.showConfirmDialog(null,
+                "Do you want to play again?",
+                "Play Again?",
                 JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
             return;
         } else {
@@ -430,7 +440,14 @@ public class SwingBoard extends JPanel implements MouseListener {
             repaint();
             mouseClicked(e);
             mouseReleased(e);
-        } else { //setup
+        } else {
+            /* only executes when setUpMode is true;
+             * User clicks 6 panels  on the board until 6 ships are created,
+             *  Multiple panels can be clicked beside each other which will create a ship of 'size' 2.
+             * The user will see a ship of size 2 as one ship when hit, and will result in a partial hit
+             * if either one ship in of the ship size 2 is hit.
+             * However, in the logic of the code, they remain and are counted as separate ships when hit.
+             */
             JPanel panel2 = (JPanel) e.getSource();
             if (userShips < MAX_USER_SHIPS) {
                 while (shipCreator < 6) {
@@ -440,7 +457,8 @@ public class SwingBoard extends JPanel implements MouseListener {
                     return;
                 }
                 configureShipSize();
-            } else { //multiple ships with same 'size' but are separate ships, user sees it as one ship.
+            } else {
+
                 initAI();
                 setUpMode = true;
                 playerPrompt();
@@ -453,7 +471,7 @@ public class SwingBoard extends JPanel implements MouseListener {
         int numberOfPanelClicked;
         for (Panel panel : listOfPanels) {
             if (panel2.getX() == panel.getX() && panel2.getY() == panel.getY()) {
-                numberOfPanelClicked = listOfPanels.indexOf(panel); //gets index value of panel by finding matching x,y coords in list, created when BOARD was initiated
+                numberOfPanelClicked = listOfPanels.indexOf(panel); //gets index value of panel by finding matching x,y coords in list
                 intValueOfPanel.add(numberOfPanelClicked); //creates list of panels that have been clicked
                 detectDuplicateShipPlacement();
             }
@@ -488,7 +506,6 @@ public class SwingBoard extends JPanel implements MouseListener {
 
     }
 
-
     private void displayNoOfShipsRemaining() {
         int guessesRemaining = state.getGuesses();
         int computerShipsRemaining = state.getComputerShips().size();
@@ -497,7 +514,7 @@ public class SwingBoard extends JPanel implements MouseListener {
     }
 
 
-    private void initShip(int x, int y, int size) {
+    public void initShip(int x, int y, int size) {
         UserShip userShip = playerSelection.createUserShip(x, y, size);
         state.addPlayerShips(userShip);
         userShips++;
@@ -536,7 +553,8 @@ public class SwingBoard extends JPanel implements MouseListener {
     }
 }
 
-/*/////////////////////// COMPUTER WINNER/////////////////
+
+/////////////////////// COMPUTER WINNER/////////////////
 // Add initComputerGuess() to initAI method
 //disable the other computerTurn and computerGuess method
 //enable methods at bottom of gameState
@@ -544,49 +562,49 @@ public class SwingBoard extends JPanel implements MouseListener {
 
 
 
-  private void initComputerGuess() {
-      state.setComputerGuessesToUser();
-    }
-
-
-
-    private void computerTurn() { // COMPUTER WINNER
-        ArrayList<Integer> computerIntValuePanel = new ArrayList();
-        int computerPanelClicked = 0;
-
-        JOptionPane.showMessageDialog(frame,
-                "Computer will now guess",
-                "Aiming...",
-                JOptionPane.PLAIN_MESSAGE);
-
-
-        Random rand = new Random();
-        int index = rand.nextInt(state.getDebugComputerGuesses().size());
-        Guess computerGuess = state.getDebugComputerGuesses().get(index);
-        log.info("comp guess x: " + computerGuess.getX() + "comp guess y: " + computerGuess.getY());
-
-        for (Panel panel : listOfPanels) {
-            if (panel.getX() == computerGuess.getX() && panel.getY() == computerGuess.getY()) {
-                computerPanelClicked = listOfPanels.indexOf(panel);
-                log.info("panel is: " + computerPanelClicked);
-                computerIntValuePanel.add(computerPanelClicked);
-
+//  private void initComputerGuess() {
+//      state.setComputerGuessesToUser();
+//    }
+//
+//
+//
+//    private void computerTurn() { // COMPUTER WINNER
+//        ArrayList<Integer> computerIntValuePanel = new ArrayList();
+//        int computerPanelClicked = 0;
+//
+//        JOptionPane.showMessageDialog(frame,
+//                "Computer will now guess",
+//                "Aiming...",
+//                JOptionPane.PLAIN_MESSAGE);
+//
+//
+//        Random rand = new Random();
+//        int index = rand.nextInt(state.getDebugComputerGuesses().size());
+//        Guess computerGuess = state.getDebugComputerGuesses().get(index);
+//        log.info("comp guess x: " + computerGuess.getX() + "comp guess y: " + computerGuess.getY());
+//
+//        for (Panel panel : listOfPanels) {
+//            if (panel.getX() == computerGuess.getX() && panel.getY() == computerGuess.getY()) {
+//                computerPanelClicked = listOfPanels.indexOf(panel);
+//                log.info("panel is: " + computerPanelClicked);
+//                computerIntValuePanel.add(computerPanelClicked);
+//
+////            }
+////            for (int i = 0; i < computerIntValuePanel.size(); i++) {
+////                int panelFind = computerIntValuePanel.get(i);//search through list to determine ship sizes 6
+////                int panelX = mainPanel.getComponent(panelFind).getX();
+////                int panelY = mainPanel.getComponent(panelFind).getY();
+//
+//                state.addComputerGuess(computerGuess);
+//                state.getDebugComputerGuesses().remove(computerGuess);
+//                Outcomes outcome = state.getOutcome(computerGuess);
+//                displayEvent(state.getOutcome(computerGuess));
+//                computerTurn = false;
+//                computerClickOutcome(outcome, computerPanelClicked);
+//                checkTurn();
 //            }
-//            for (int i = 0; i < computerIntValuePanel.size(); i++) {
-//                int panelFind = computerIntValuePanel.get(i);//search through list to determine ship sizes 6
-//                int panelX = mainPanel.getComponent(panelFind).getX();
-//                int panelY = mainPanel.getComponent(panelFind).getY();
+//        }
+//    }
+//}
+//
 
-                state.addComputerGuess(computerGuess);
-                state.getDebugComputerGuesses().remove(computerGuess);
-                Outcomes outcome = state.getOutcome(computerGuess);
-                displayEvent(state.getOutcome(computerGuess));
-                computerTurn = false;
-                computerClickOutcome(outcome, computerPanelClicked);
-                checkTurn();
-            }
-        }
-    }
-}
-
-*/

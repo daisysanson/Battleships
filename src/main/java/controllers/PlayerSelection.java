@@ -26,7 +26,7 @@ public class PlayerSelection {
 
 
     public List<Integer> initList() {
-       return computerShip2.listOfComputerPanels();
+        return computerShip2.listOfComputerPanels();
 
 
     }
@@ -40,15 +40,15 @@ public class PlayerSelection {
         return new UserShip(x, y, size);
     }
 
-
+}
 // // method for 'Computer winner mode'
 //  public List<Integer> initList(){
 //        List<Integer> list = computerShip2.debugComputerHits();
 //        return list;
 //
 //    }
-
-}
+//
+//}
 
 
 
