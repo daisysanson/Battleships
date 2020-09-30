@@ -10,6 +10,7 @@ import service.GameState;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,14 +21,36 @@ class SwingBoardTest {
     SwingBoard swingBoard = new SwingBoard(state, playerSelection);
 
 
-
     @Test
     public void shouldSetUpComputerShip() {
+        int expectedShipArrayListSize = 1;
         swingBoard.initComputerShips(3);
         List<ComputerShip> computerShip = state.getComputerShips();
         assertNotNull(computerShip);
-        assertEquals(1, computerShip.size());
+        assertEquals(expectedShipArrayListSize, computerShip.size());
     }
+
+    @Test
+    public void shouldReselectComputerShip() {
+        int randomPanel = 0;
+        UserShip userShip = playerSelection.createUserShip(1, 2, 1);
+        UserShip userShip1 = playerSelection.createUserShip(54, 2, 1);
+        state.addPlayerShips(userShip);
+        state.addPlayerShips(userShip1);
+
+        int size = 4;
+        List<Integer> testPanelNumbers = new ArrayList<>(size);
+        for (int i = 0; i <= size; i++) {
+            testPanelNumbers.add(i);
+        }
+        while (!(state.getComputerShips().size() == 1)) {
+             randomPanel = playerSelection.generateComputerPanel(testPanelNumbers);
+            swingBoard.initComputerShips(randomPanel);
+        }
+            assertTrue( randomPanel>=2);
+        }
+
+
 
     @Test
     public void shouldHitUserShip(){
@@ -43,9 +66,10 @@ class SwingBoardTest {
     @Test
     public void shouldHitComputerShips(){
         swingBoard.initComputerShips(1);
+        swingBoard.initComputerShips(5);
         Guess userGuess = playerSelection.createGuess(1,2);
         state.addUserGuess(userGuess);
-        assertEquals(Outcomes.HIT, state.getOutcome(userGuess));
+        assertEquals(Outcomes.GAME_OVER, state.getOutcome(userGuess));
     }
 
 
